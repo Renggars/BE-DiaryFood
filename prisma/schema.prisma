@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(user)
+  photo     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resep     Resep[]
+  pencarian Pencarian[]
+}
+
+model Resep {
+  id               Int      @id @default(autoincrement())
+  nama             String
+  thumbnail        String?
+  kategoriId       Int
+  bahan            String
+  langkahPembuatan String
+  tanggalUnggahan  DateTime @default(now())
+  userId           Int
+
+  user           User               @relation(fields: [userId], references: [id])
+  kategori       Kategori           @relation(fields: [kategoriId], references: [id])
+  bahanList      Bahan[]
+  langkahList    LangkahPembuatan[]
+  hasilPencarian HasilPencarian[]
+}
+
+model Kategori {
+  id   Int    @id @default(autoincrement())
+  nama String
+
+  resep Resep[]
+}
+
+model Bahan {
+  id      Int    @id @default(autoincrement())
+  resepId Int
+  nama    String
+  jumlah  String
+
+  resep Resep @relation(fields: [resepId], references: [id])
+}
+
+model LangkahPembuatan {
+  id        Int    @id @default(autoincrement())
+  resepId   Int
+  urutan    Int
+  deskripsi String
+
+  resep Resep @relation(fields: [resepId], references: [id])
+}
+
+model Pencarian {
+  id               Int      @id @default(autoincrement())
+  userId           Int
+  kataKunci        String
+  tanggalPencarian DateTime @default(now())
+
+  user           User             @relation(fields: [userId], references: [id])
+  hasilPencarian HasilPencarian[]
+}
+
+model HasilPencarian {
+  id          Int @id @default(autoincrement())
+  pencarianId Int
+  resepId     Int
+
+  pencarian Pencarian @relation(fields: [pencarianId], references: [id])
+  resep     Resep     @relation(fields: [resepId], references: [id])
+}
