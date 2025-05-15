@@ -1,8 +1,12 @@
 const express = require("express");
 const authRoute = require("./auth.route");
 const userRoute = require("./user.route");
-const productRoute = require("./product.route");
-const categoryRoute = require("./category.route");
+const resepRoute = require("./resep.route");
+const kategoriRoute = require("./kategori.route");
+const pencarianRoute = require("./pencarian.route");
+const bahanRoute = require("./bahan.route");
+const langkahRoute = require("./langkah.route");
+const adminResepRoute = require("./adminResep.route");
 
 const router = express.Router();
 
@@ -16,12 +20,28 @@ const defaultRoutes = [
     route: userRoute,
   },
   {
-    path: "/product",
-    route: productRoute,
+    path: "/resep",
+    route: resepRoute,
   },
   {
     path: "/category",
-    route: categoryRoute,
+    route: kategoriRoute,
+  },
+  {
+    path: "/pencarian",
+    route: pencarianRoute,
+  },
+  {
+    path: "/bahan",
+    route: bahanRoute,
+  },
+  {
+    path: "/langkah",
+    route: langkahRoute,
+  },
+  {
+    path: "/admin/resep",
+    route: adminResepRoute,
   },
 ];
 

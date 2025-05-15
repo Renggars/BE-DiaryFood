@@ -1,5 +1,9 @@
 module.exports.authValidation = require("./auth.validation");
 module.exports.userValidation = require("./user.validation");
-module.exports.productValidation = require("./product.validation");
-module.exports.categoryValidation = require("./category.validation");
 module.exports.paginationValidation = require("./pagination.validation");
+module.exports.resepValidation = require("./resep.validation");
+module.exports.adminResepValidation = require("./adminResep.validation");
+module.exports.bahanValidation = require("./bahan.validation");
+module.exports.langkahValidation = require("./langkah.validation");
+module.exports.kategoriValidation = require("./kategori.validation");
+module.exports.pencarianValidation = require("./pencarian.validation");

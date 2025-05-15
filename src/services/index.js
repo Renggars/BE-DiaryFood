@@ -1,4 +1,9 @@
-module.exports.authService = require('./auth.service');
-module.exports.tokenService = require('./token.service');
-module.exports.userService = require('./user.service');
-module.exports.categoryService = require('./category.service');
+module.exports.authService = require("./auth.service");
+module.exports.tokenService = require("./token.service");
+module.exports.userService = require("./user.service");
+module.exports.KategoriService = require("./kategori.service");
+module.exports.resepService = require("./resep.service");
+module.exports.bahanService = require("./bahan.service");
+module.exports.langkahService = require("./langkah.service");
+module.exports.pencarianService = require("./pencarian.service");
+module.exports.adminResepService = require("./adminResep.service");

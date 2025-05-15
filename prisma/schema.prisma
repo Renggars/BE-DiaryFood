@@ -23,23 +23,30 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  resep     Resep[]
+  resepDiunggah  Resep[] @relation("UserUploadResep")
+  resepDisetujui Resep[] @relation("ResepDisetujuiAdmin")
+
   pencarian Pencarian[]
 }
 
 model Resep {
-  id               Int      @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   nama             String
   thumbnail        String?
   kategoriId       Int
   bahan            String
   langkahPembuatan String
-  tanggalUnggahan  DateTime @default(now())
+  tanggalUnggahan  DateTime  @default(now())
   userId           Int
+  disetujui        Boolean   @default(false)
+  tanggalAcc       DateTime?
+  disetujuiOleh    Int?
 
-  user           User               @relation(fields: [userId], references: [id])
-  kategori       Kategori           @relation(fields: [kategoriId], references: [id])
-  bahanList      Bahan[]
+  kategori  Kategori @relation(fields: [kategoriId], references: [id])
+  bahanList Bahan[]
+  user      User     @relation("UserUploadResep", fields: [userId], references: [id])
+  admin     User?    @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
+
   langkahList    LangkahPembuatan[]
   hasilPencarian HasilPencarian[]
 }
