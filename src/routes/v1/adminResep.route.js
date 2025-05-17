@@ -8,12 +8,7 @@ const router = express.Router();
 
 router
   .route("/")
-  .get(
-    auth(),
-    authAcces(),
-    validate(adminResepValidation.getAdminResep),
-    adminResepController.getAdminResep
-  );
+  .get(auth(), authAcces(), adminResepController.getPendingReseps);
 
 router
   .route("/:id/approve")

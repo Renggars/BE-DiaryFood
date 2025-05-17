@@ -11,18 +11,18 @@ router
     validate(pencarianValidation.createPencarian),
     pencarianController.createPencarian
   )
-  .get(pencarianController.getPencarians);
+  .get(pencarianController.getAllPencarian);
 
 router
   .route("/:pencarianId")
   .get(
     validate(pencarianValidation.getPencarian),
-    pencarianController.getPencarian
+    pencarianController.getPencarianById
   )
-  .put(
-    validate(pencarianValidation.updatePencarian),
-    pencarianController.updatePencarian
-  )
+  // .put(
+  //   validate(pencarianValidation.updatePencarian),
+  //   pencarianController.updatePencarian
+  // )
   .delete(
     validate(pencarianValidation.deletePencarian),
     pencarianController.deletePencarian
