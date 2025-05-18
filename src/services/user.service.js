@@ -2,6 +2,7 @@ const httpStatus = require("http-status");
 const prisma = require("../../prisma/index");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
+const { removePassword } = require("../utils/sanitizeUser");
 
 /**
  * Create a user
@@ -18,8 +19,7 @@ const createUser = async (userBody) => {
     },
   });
 
-  const { password, ...userWithoutPassword } = newUser;
-  return userWithoutPassword;
+  return removePassword(newUser);
 };
 
 /**
@@ -47,13 +47,17 @@ const queryUsers = async (filter, options) => {
     currentPage,
   };
 
-  return { users, pagination };
+  const sanitizedUsers = users.map(removePassword);
+
+  return { users: sanitizedUsers, pagination };
 };
 
 const getUserByEmail = async (email) => {
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: { email },
   });
+
+  return removePassword(user);
 };
 
 /**
@@ -62,11 +66,13 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (userId) => {
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where: {
       id: userId,
     },
   });
+
+  return removePassword(user);
 };
 
 /**
@@ -76,12 +82,11 @@ const getUserById = async (userId) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
-  updateBody.password = bcrypt.hashSync(updateBody.password, 8);
-
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
+
   const updateUser = await prisma.user.update({
     where: {
       id: userId,
@@ -89,7 +94,7 @@ const updateUserById = async (userId, updateBody) => {
     data: updateBody,
   });
 
-  return updateUser;
+  return removePassword(updateUser);
 };
 
 /**

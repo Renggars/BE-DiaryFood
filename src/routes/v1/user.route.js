@@ -18,18 +18,8 @@ router
 
 router
   .route("/:userId")
-  .get(
-    auth(),
-    authAcces(),
-    validate(userValidation.getUser),
-    userController.getUser
-  )
-  .put(
-    auth(),
-    authAcces(),
-    validate(userValidation.updateUser),
-    userController.updateUser
-  )
+  .get(auth(), validate(userValidation.getUser), userController.getUser)
+  .put(auth(), validate(userValidation.updateUser), userController.updateUser)
   .delete(
     auth(),
     authAcces(),

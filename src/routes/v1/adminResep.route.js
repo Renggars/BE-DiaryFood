@@ -12,14 +12,14 @@ router
 
 router
   .route("/:id/approve")
-  .patch(
+  .put(
     validate(adminResepValidation.resepId),
     adminResepController.approveResep
   );
 
 router
   .route("/:id/reject")
-  .patch(
+  .put(
     validate(adminResepValidation.resepId),
     adminResepController.rejectResep
   );

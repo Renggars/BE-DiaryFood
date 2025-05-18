@@ -16,7 +16,7 @@ router
   .get(kategoriController.getKategoris);
 
 router
-  .route("/:kategoriId")
+  .route("/:categoryId")
   .get(validate(kategoriValidation.getKategori), kategoriController.getKategori)
   .put(
     auth(),

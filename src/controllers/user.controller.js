@@ -29,6 +29,7 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const result = await userService.getUserById(req.params.userId);
+    console.log(result);
     responseApiSuccess(res, "Success get user", result);
   } catch (err) {
     responseApiFailed(res, "Failed get user");
@@ -51,7 +52,7 @@ const updateUser = async (req, res) => {
       req.body
     );
     if (!result) {
-      throw new ApiError(httpStatus.NOT_FOUND, "Product not found");
+      throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     }
     responseApiSuccess(res, "Success update user", result);
   } catch (err) {

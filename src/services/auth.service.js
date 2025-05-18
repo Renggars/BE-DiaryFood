@@ -1,7 +1,7 @@
 const httpStatus = require("http-status");
-const userService = require("./user.service");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
+const prisma = require("../../prisma");
 
 /**
  * Login with username and password
@@ -10,7 +10,9 @@ const bcrypt = require("bcryptjs");
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
-  const user = await userService.getUserByEmail(email);
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
 
   if (!user) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
@@ -22,7 +24,10 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
 
-  return user;
+  console.log(user);
+  const { password: _password, ...userWithoutPassword } = user;
+  console.log(userWithoutPassword);
+  return userWithoutPassword;
 };
 
 module.exports = {

@@ -18,19 +18,18 @@ const querySchema = Joi.object({
 
 const getUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId).required(),
+    userId: Joi.number().required(),
   }),
 };
 
 const updateUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId).required(),
+    userId: Joi.number().required(),
   }),
   body: Joi.object()
     .keys({
       name: Joi.string(),
       email: Joi.string().email(),
-      password: Joi.string().custom(password),
       role: Joi.string().valid("user", "admin"),
     })
     .min(1),
@@ -38,7 +37,7 @@ const updateUser = {
 
 const deleteUser = {
   params: Joi.object().keys({
-    userId: Joi.string().custom(objectId).required(),
+    userId: Joi.number().required(),
   }),
 };
 

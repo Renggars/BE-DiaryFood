@@ -28,10 +28,6 @@ const defaultRoutes = [
     route: kategoriRoute,
   },
   {
-    path: "/pencarian",
-    route: pencarianRoute,
-  },
-  {
     path: "/bahan",
     route: bahanRoute,
   },
@@ -42,6 +38,10 @@ const defaultRoutes = [
   {
     path: "/admin/resep",
     route: adminResepRoute,
+  },
+  {
+    path: "/pencarian",
+    route: pencarianRoute,
   },
 ];
 
