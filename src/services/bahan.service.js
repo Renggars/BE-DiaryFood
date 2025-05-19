@@ -10,6 +10,7 @@ const getBahanById = async (bahanId) => {
 
 const updateBahanById = async (bahanId, updateBody) => {
   const bahan = await getBahanById(bahanId);
+  console.log(bahan);
   if (!bahan) throw new ApiError(httpStatus.NOT_FOUND, "Bahan not found");
 
   return prisma.bahan.update({

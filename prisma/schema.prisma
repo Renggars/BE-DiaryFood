@@ -30,17 +30,15 @@ model User {
 }
 
 model Resep {
-  id               Int       @id @default(autoincrement())
-  nama             String
-  thumbnail        String?
-  kategoriId       Int
-  bahan            String
-  langkahPembuatan String
-  tanggalUnggahan  DateTime  @default(now())
-  userId           Int
-  disetujui        Boolean   @default(false)
-  tanggalAcc       DateTime?
-  disetujuiOleh    Int?
+  id              Int       @id @default(autoincrement())
+  nama            String
+  photoResep      String?
+  kategoriId      Int
+  tanggalUnggahan DateTime  @default(now())
+  userId          Int
+  isApproved      Boolean   @default(false)
+  tanggalAcc      DateTime?
+  disetujuiOleh   Int?
 
   kategori  Kategori @relation(fields: [kategoriId], references: [id])
   bahanList Bahan[]
@@ -64,7 +62,7 @@ model Bahan {
   nama    String
   jumlah  String
 
-  resep Resep @relation(fields: [resepId], references: [id])
+  resep Resep @relation(fields: [resepId], references: [id], onDelete: Cascade)
 }
 
 model LangkahPembuatan {
@@ -73,7 +71,7 @@ model LangkahPembuatan {
   urutan    Int
   deskripsi String
 
-  resep Resep @relation(fields: [resepId], references: [id])
+  resep Resep @relation(fields: [resepId], references: [id], onDelete: Cascade)
 }
 
 model Pencarian {

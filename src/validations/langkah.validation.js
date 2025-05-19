@@ -7,8 +7,8 @@ const updateLangkah = {
   }),
   body: Joi.object()
     .keys({
-      urutan: Joi.number().integer().min(1),
-      deskripsi: Joi.string(),
+      urutan: Joi.number().integer().optional(),
+      deskripsi: Joi.string().optional(),
     })
     .min(1),
 };

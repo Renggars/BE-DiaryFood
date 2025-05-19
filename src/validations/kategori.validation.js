@@ -6,6 +6,12 @@ const createKategori = {
   }),
 };
 
+const getKategori = {
+  params: Joi.object().keys({
+    kategoriId: Joi.number().integer().required(),
+  }),
+};
+
 const updateKategori = {
   params: Joi.object().keys({
     kategoriId: Joi.number().integer().required(),
@@ -18,12 +24,6 @@ const updateKategori = {
 };
 
 const deleteKategori = {
-  params: Joi.object().keys({
-    kategoriId: Joi.number().integer().required(),
-  }),
-};
-
-const getKategori = {
   params: Joi.object().keys({
     kategoriId: Joi.number().integer().required(),
   }),

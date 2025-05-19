@@ -13,7 +13,7 @@ const langkahPembuatanSchema = Joi.object({
 const createResep = {
   body: Joi.object({
     nama: Joi.string().required(),
-    thumbnail: Joi.string().uri().optional().allow(null, ""),
+    photoResep: Joi.string().uri().optional().allow(null, ""),
     kategoriId: Joi.number().integer().required(),
     userId: Joi.number().integer().required(),
     bahan: Joi.array().items(bahanSchema).min(1).required(),
@@ -30,7 +30,7 @@ const updateResep = {
   }),
   body: Joi.object({
     nama: Joi.string().optional(),
-    thumbnail: Joi.string().uri().optional().allow(null, ""),
+    photoResep: Joi.string().uri().optional().allow(null, ""),
     kategoriId: Joi.number().integer().optional(),
     userId: Joi.number().integer().optional(),
     isApproved: Joi.boolean().optional(),
@@ -45,6 +45,12 @@ const getResep = {
   }),
 };
 
+const deleteResep = {
+  params: Joi.object().keys({
+    resepId: Joi.number().required(),
+  }),
+};
+
 const querySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).default(10),
@@ -55,7 +61,8 @@ const querySchema = Joi.object({
 
 module.exports = {
   createResep,
-  updateResep,
   getResep,
+  updateResep,
+  deleteResep,
   querySchema,
 };

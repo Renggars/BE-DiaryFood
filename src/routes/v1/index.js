@@ -20,12 +20,12 @@ const defaultRoutes = [
     route: userRoute,
   },
   {
-    path: "/resep",
-    route: resepRoute,
-  },
-  {
     path: "/category",
     route: kategoriRoute,
+  },
+  {
+    path: "/resep",
+    route: resepRoute,
   },
   {
     path: "/bahan",

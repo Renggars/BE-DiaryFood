@@ -28,9 +28,9 @@ const updateUser = {
   }),
   body: Joi.object()
     .keys({
-      name: Joi.string(),
-      email: Joi.string().email(),
-      role: Joi.string().valid("user", "admin"),
+      name: Joi.string().optional(),
+      email: Joi.string().email().optional(),
+      role: Joi.string().valid("user", "admin").optional(),
     })
     .min(1),
 };

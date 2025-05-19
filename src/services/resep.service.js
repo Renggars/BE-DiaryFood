@@ -2,40 +2,45 @@
 const httpStatus = require("http-status");
 const prisma = require("../../prisma/index");
 const ApiError = require("../utils/ApiError");
+const { lang } = require("moment");
 
 const createResep = async (data) => {
   return prisma.$transaction(async (tx) => {
     const resep = await tx.resep.create({
       data: {
         nama: data.nama,
-        thumbnail: data.thumbnail,
+        photoResep: data.photoResep,
         kategoriId: data.kategoriId,
         userId: data.userId,
         isApproved: false,
       },
     });
 
-    if (data.bahan && Array.isArray(data.bahan)) {
-      await tx.bahan.createMany({
-        data: data.bahan.map((b) => ({
-          resepId: resep.id,
-          nama: b.nama,
-          jumlah: b.jumlah,
-        })),
-      });
-    }
+    await tx.bahan.createMany({
+      data: data.bahan.map((bahan) => ({
+        resepId: resep.id,
+        nama: bahan.nama,
+        jumlah: bahan.jumlah,
+      })),
+    });
 
-    if (data.langkahPembuatan && Array.isArray(data.langkahPembuatan)) {
-      await tx.langkahPembuatan.createMany({
-        data: data.langkahPembuatan.map((l) => ({
-          resepId: resep.id,
-          urutan: l.urutan,
-          deskripsi: l.deskripsi,
-        })),
-      });
-    }
+    await tx.langkahPembuatan.createMany({
+      data: data.langkahPembuatan.map((langkah) => ({
+        resepId: resep.id,
+        urutan: langkah.urutan,
+        deskripsi: langkah.deskripsi,
+      })),
+    });
 
-    return resep;
+    const resepLengkap = await tx.resep.findUnique({
+      where: { id: resep.id },
+      include: {
+        bahanList: true,
+        langkahList: true,
+      },
+    });
+
+    return resepLengkap;
   });
 };
 
@@ -48,6 +53,14 @@ const queryReseps = async (filter, options) => {
     where: filter,
     skip,
     take: limit,
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
   });
 
   const totalItems = await prisma.resep.count({ where: filter });
@@ -64,7 +77,17 @@ const queryReseps = async (filter, options) => {
 };
 
 const getResepById = async (id) => {
-  const resep = await prisma.resep.findUnique({ where: { id } });
+  const resep = await prisma.resep.findUnique({
+    where: { id },
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
+  });
   if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
   return resep;
 };
@@ -73,17 +96,78 @@ const updateResepById = async (id, updateBody) => {
   const existing = await prisma.resep.findUnique({ where: { id } });
   if (!existing) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
-  return prisma.resep.update({
+  const operations = [];
+
+  if (updateBody.bahan) {
+    operations.push(prisma.bahan.deleteMany({ where: { resepId: id } }));
+    operations.push(
+      prisma.bahan.createMany({
+        data: updateBody.bahan.map((bahan) => ({
+          resepId: id,
+          nama: bahan.nama,
+          jumlah: bahan.jumlah,
+        })),
+      })
+    );
+    delete updateBody.bahan;
+  }
+
+  if (updateBody.langkahPembuatan) {
+    operations.push(
+      prisma.langkahPembuatan.deleteMany({ where: { resepId: id } })
+    );
+    operations.push(
+      prisma.langkahPembuatan.createMany({
+        data: updateBody.langkahPembuatan.map((langkah) => ({
+          resepId: id,
+          urutan: langkah.urutan,
+          deskripsi: langkah.deskripsi,
+        })),
+      })
+    );
+    delete updateBody.langkahPembuatan;
+  }
+
+  operations.push(
+    prisma.resep.update({
+      where: { id },
+      data: updateBody,
+    })
+  );
+
+  await prisma.$transaction(operations);
+
+  const updatedResep = await prisma.resep.findUnique({
     where: { id },
-    data: updateBody,
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
   });
+
+  return updatedResep;
 };
 
 const deleteResepById = async (id) => {
-  const existing = await prisma.resep.findUnique({ where: { id } });
-  if (!existing) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  const existingResep = await prisma.resep.findUnique({ where: { id } });
+  if (!existingResep)
+    throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
-  return prisma.resep.delete({ where: { id } });
+  return prisma.resep.delete({
+    where: { id },
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
+  });
 };
 
 module.exports = {

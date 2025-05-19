@@ -7,8 +7,8 @@ const updateBahan = {
   }),
   body: Joi.object()
     .keys({
-      nama: Joi.string(),
-      jumlah: Joi.string(),
+      nama: Joi.string().optional(),
+      jumlah: Joi.string().optional(),
     })
     .min(1),
 };

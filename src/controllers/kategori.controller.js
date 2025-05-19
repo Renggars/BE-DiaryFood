@@ -8,27 +8,27 @@ const {
 const getKategoris = async (req, res) => {
   try {
     const result = await kategoriService.getKategoris();
-    responseApiSuccess(res, "Berhasil mengambil data kategori", result);
+    responseApiSuccess(res, "Success get categorys", result);
   } catch (err) {
-    responseApiFailed(res, "Gagal mengambil data kategori");
+    responseApiFailed(res, "Failed get categorys");
   }
 };
 
 const getKategori = async (req, res) => {
   try {
     const result = await kategoriService.getKategoriById(req.params.kategoriId);
-    responseApiSuccess(res, "Berhasil mengambil data kategori", result);
+    responseApiSuccess(res, "Success get category", result);
   } catch (err) {
-    responseApiFailed(res, "Gagal mengambil data kategori");
+    responseApiFailed(res, "Failed get category");
   }
 };
 
 const createKategori = async (req, res) => {
   try {
     const result = await kategoriService.createKategori(req.body);
-    responseApiCreateSuccess(res, "Berhasil membuat kategori", result);
+    responseApiCreateSuccess(res, "Success create category", result);
   } catch (err) {
-    responseApiFailed(res, "Gagal membuat kategori");
+    responseApiFailed(res, "Failed create category");
   }
 };
 
@@ -38,9 +38,9 @@ const updateKategori = async (req, res) => {
       req.params.kategoriId,
       req.body
     );
-    responseApiSuccess(res, "Berhasil mengubah kategori", result);
+    responseApiSuccess(res, "Success update category", result);
   } catch (err) {
-    responseApiFailed(res, "Gagal mengubah kategori");
+    responseApiFailed(res, "Failed update category");
   }
 };
 
@@ -49,9 +49,9 @@ const deleteKategori = async (req, res) => {
     const result = await kategoriService.deleteKategoriById(
       req.params.kategoriId
     );
-    responseApiSuccess(res, "Berhasil menghapus kategori", result);
+    responseApiSuccess(res, "Success delete category", result);
   } catch (err) {
-    responseApiFailed(res, "Gagal menghapus kategori");
+    responseApiFailed(res, "Failed delete category");
   }
 };
 
