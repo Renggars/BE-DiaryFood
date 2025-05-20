@@ -3,14 +3,20 @@ const prisma = require("../../prisma/index");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
 const { removePassword } = require("../utils/sanitizeUser");
+const uploadFile = require("../utils/uploadFile");
 
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createUser = async (userBody) => {
+const createUser = async (userBody, file) => {
   const hashedPassword = bcrypt.hashSync(userBody.password, 8);
+
+  let photoUrl = null;
+  if (file) {
+    photoUrl = await uploadFile(file, "photo-user");
+  }
 
   const newUser = await prisma.user.create({
     data: {

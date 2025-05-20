@@ -1,9 +1,16 @@
 const Joi = require("joi");
-const { objectId } = require("./custom.validation");
+
+const createBahan = {
+  body: Joi.object().keys({
+    resepId: Joi.number().required(),
+    nama: Joi.string().required(),
+    jumlah: Joi.string().required(),
+  }),
+};
 
 const updateBahan = {
   params: Joi.object().keys({
-    bahanId: Joi.string().custom(objectId).required(),
+    bahanId: Joi.number().required(),
   }),
   body: Joi.object()
     .keys({
@@ -15,8 +22,8 @@ const updateBahan = {
 
 const deleteBahan = {
   params: Joi.object().keys({
-    bahanId: Joi.string().custom(objectId).required(),
+    bahanId: Joi.number().required(),
   }),
 };
 
-module.exports = { updateBahan, deleteBahan };
+module.exports = { createBahan, updateBahan, deleteBahan };

@@ -7,7 +7,15 @@ const langkahController = require("../../controllers/langkah.controller");
 const router = express.Router();
 
 router
-  .route("/langkahId")
+  .route("/")
+  .post(
+    auth(),
+    validate(langkahValidation.createLangkah),
+    langkahController.createLangkah
+  );
+
+router
+  .route("/:langkahId")
   .put(
     auth(),
     validate(langkahValidation.updateLangkah),

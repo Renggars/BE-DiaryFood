@@ -38,7 +38,7 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const result = await userService.createUser(req.body);
+    const result = await userService.createUser(req.body, req.file);
     responseApiCreateSuccess(res, "Success create user", result);
   } catch (err) {
     responseApiFailed(res, "Failed create user");

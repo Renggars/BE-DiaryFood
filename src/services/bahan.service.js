@@ -2,6 +2,10 @@ const prisma = require("../../prisma");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
+const createBahan = async (bahan) => {
+  return prisma.bahan.create({ data: bahan });
+};
+
 const getBahanById = async (bahanId) => {
   return prisma.bahan.findUnique({
     where: { id: parseInt(bahanId) },
@@ -28,4 +32,4 @@ const deleteBahanById = async (bahanId) => {
   });
 };
 
-module.exports = { updateBahanById, deleteBahanById };
+module.exports = { createBahan, updateBahanById, deleteBahanById };

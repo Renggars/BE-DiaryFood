@@ -7,7 +7,15 @@ const bahanController = require("../../controllers/bahan.controller");
 const router = express.Router();
 
 router
-  .route("/bahanId")
+  .route("/")
+  .post(
+    auth(),
+    validate(bahanValidation.createBahan),
+    bahanController.createBahan
+  );
+
+router
+  .route("/:bahanId")
   .put(
     auth(),
     validate(bahanValidation.updateBahan),

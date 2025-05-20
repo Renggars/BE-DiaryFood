@@ -2,6 +2,10 @@ const prisma = require("../../prisma");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
+const createLangkah = async (langkah) => {
+  return prisma.langkahPembuatan.create({ data: langkah });
+};
+
 const getLangkahById = async (langkahId) => {
   return prisma.langkahPembuatan.findUnique({
     where: { id: parseInt(langkahId) },
@@ -27,4 +31,4 @@ const deleteLangkahById = async (langkahId) => {
   });
 };
 
-module.exports = { updateLangkahById, deleteLangkahById };
+module.exports = { createLangkah, updateLangkahById, deleteLangkahById };

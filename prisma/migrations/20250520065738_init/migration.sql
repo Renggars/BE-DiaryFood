@@ -19,12 +19,13 @@ CREATE TABLE "User" (
 CREATE TABLE "Resep" (
     "id" SERIAL NOT NULL,
     "nama" TEXT NOT NULL,
-    "thumbnail" TEXT,
+    "photoResep" TEXT,
     "kategoriId" INTEGER NOT NULL,
-    "bahan" TEXT NOT NULL,
-    "langkahPembuatan" TEXT NOT NULL,
     "tanggalUnggahan" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" INTEGER NOT NULL,
+    "isApproved" BOOLEAN NOT NULL DEFAULT false,
+    "tanggalAcc" TIMESTAMP(3),
+    "disetujuiOleh" INTEGER,
 
     CONSTRAINT "Resep_pkey" PRIMARY KEY ("id")
 );
@@ -80,16 +81,19 @@ CREATE TABLE "HasilPencarian" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
-ALTER TABLE "Resep" ADD CONSTRAINT "Resep_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Resep" ADD CONSTRAINT "Resep_kategoriId_fkey" FOREIGN KEY ("kategoriId") REFERENCES "Kategori"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Bahan" ADD CONSTRAINT "Bahan_resepId_fkey" FOREIGN KEY ("resepId") REFERENCES "Resep"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Resep" ADD CONSTRAINT "Resep_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LangkahPembuatan" ADD CONSTRAINT "LangkahPembuatan_resepId_fkey" FOREIGN KEY ("resepId") REFERENCES "Resep"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Resep" ADD CONSTRAINT "Resep_disetujuiOleh_fkey" FOREIGN KEY ("disetujuiOleh") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Bahan" ADD CONSTRAINT "Bahan_resepId_fkey" FOREIGN KEY ("resepId") REFERENCES "Resep"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LangkahPembuatan" ADD CONSTRAINT "LangkahPembuatan_resepId_fkey" FOREIGN KEY ("resepId") REFERENCES "Resep"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Pencarian" ADD CONSTRAINT "Pencarian_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -2,7 +2,17 @@ const langkahService = require("../services/langkah.service");
 const {
   responseApiSuccess,
   responseApiFailed,
+  responseApiCreateSuccess,
 } = require("../utils/responseApi");
+
+const createLangkah = async (req, res) => {
+  try {
+    const result = await langkahService.createLangkah(req.body);
+    responseApiCreateSuccess(res, "Success create langkah", result);
+  } catch (error) {
+    res.status(500).json({ message: "Gagal menambah langkah", error });
+  }
+};
 
 const updateLangkah = async (req, res) => {
   try {
@@ -27,4 +37,4 @@ const deleteLangkah = async (req, res) => {
   }
 };
 
-module.exports = { updateLangkah, deleteLangkah };
+module.exports = { createLangkah, updateLangkah, deleteLangkah };

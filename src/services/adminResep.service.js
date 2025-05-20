@@ -4,7 +4,7 @@ const { supabase } = require("../utils/supabase");
 const getPendingReseps = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
   const data = await prisma.resep.findMany({
-    where: { status: "pending" },
+    where: { isApproved: false },
     skip,
     take: parseInt(limit),
     orderBy: { createdAt: "desc" },
@@ -24,14 +24,14 @@ const getPendingReseps = async ({ page = 1, limit = 10 }) => {
 const approveResep = async (id) => {
   return prisma.resep.update({
     where: { id },
-    data: { status: "approved" },
+    data: { isApproved: true },
   });
 };
 
 const rejectResep = async (id) => {
   return prisma.resep.update({
     where: { id },
-    data: { status: "rejected" },
+    data: { isApproved: false },
   });
 };
 

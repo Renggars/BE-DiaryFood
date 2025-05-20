@@ -7,8 +7,19 @@ const createUser = {
     email: Joi.string().email().required(),
     password: Joi.string().custom(password).required(),
     role: Joi.string().valid("user", "admin").default("user"),
-    photo: Joi.string().optional(),
   }),
+  file: Joi.object({
+    mimetype: Joi.string()
+      .valid("image/jpeg", "image/png", "image/webp")
+      .messages({
+        "any.only": "File harus berupa gambar (jpeg, png, webp)",
+      }),
+    size: Joi.number()
+      .max(5 * 1024 * 1024) // 5MB
+      .messages({
+        "number.max": "Ukuran file maksimal 5MB",
+      }),
+  }).optional(),
 };
 
 const querySchema = Joi.object({

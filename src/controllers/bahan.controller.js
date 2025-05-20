@@ -4,6 +4,16 @@ const {
   responseApiFailed,
 } = require("../utils/responseApi");
 
+const createBahan = async (req, res) => {
+  try {
+    const result = await bahanService.createBahan(req.body);
+    responseApiSuccess(res, "Success create bahan", result);
+  } catch (err) {
+    console.log(err);
+    responseApiFailed(res, "Failed create bahan");
+  }
+};
+
 const updateBahan = async (req, res) => {
   try {
     const result = await bahanService.updateBahanById(
@@ -27,4 +37,4 @@ const deleteBahan = async (req, res) => {
   }
 };
 
-module.exports = { updateBahan, deleteBahan };
+module.exports = { createBahan, updateBahan, deleteBahan };
