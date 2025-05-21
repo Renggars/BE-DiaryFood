@@ -1,9 +1,5 @@
 const kategoriService = require("../services/kategori.service");
-const {
-  responseApiSuccess,
-  responseApiFailed,
-  responseApiCreateSuccess,
-} = require("../utils/responseApi");
+const { responseApiSuccess, responseApiFailed, responseApiCreateSuccess } = require("../utils/responseApi");
 
 const getKategoris = async (req, res) => {
   try {
@@ -34,10 +30,7 @@ const createKategori = async (req, res) => {
 
 const updateKategori = async (req, res) => {
   try {
-    const result = await kategoriService.updateKategoriById(
-      req.params.kategoriId,
-      req.body
-    );
+    const result = await kategoriService.updateKategoriById(req.params.kategoriId, req.body);
     responseApiSuccess(res, "Success update category", result);
   } catch (err) {
     responseApiFailed(res, "Failed update category");
@@ -46,9 +39,7 @@ const updateKategori = async (req, res) => {
 
 const deleteKategori = async (req, res) => {
   try {
-    const result = await kategoriService.deleteKategoriById(
-      req.params.kategoriId
-    );
+    const result = await kategoriService.deleteKategoriById(req.params.kategoriId);
     responseApiSuccess(res, "Success delete category", result);
   } catch (err) {
     responseApiFailed(res, "Failed delete category");
