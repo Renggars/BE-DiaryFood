@@ -10,7 +10,7 @@ const xss = require("xss-clean");
 const compression = require("compression");
 const cors = require("cors");
 const passport = require("passport");
-const { jwtStrategy } = require("./config/passport");
+const { jwtStrategy, googleStrategy, facebookStrategy } = require("./config/passport");
 
 const app = express();
 
@@ -45,6 +45,8 @@ app.get("/", (req, res) => {
 // jwt authentication
 app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
+passport.use("google", googleStrategy);
+// passport.use("facebook", facebookStrategy);
 
 // v1 api routes
 app.use("/v1", routes);

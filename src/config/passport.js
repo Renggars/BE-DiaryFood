@@ -1,4 +1,6 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+// const { Strategy: FacebookStrategy } = require("passport-facebook");
 const config = require("./config");
 const { tokenTypes } = require("./tokens");
 const prisma = require("../../prisma/index");
@@ -25,6 +27,73 @@ const jwtVerify = async (payload, done) => {
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 
+// Google OAuth Strategy
+const googleStrategy = new GoogleStrategy(
+  {
+    clientID: config.google.clientId,
+    clientSecret: config.google.clientSecret,
+    callbackURL: config.google.callbackURL,
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await prisma.user.findFirst({
+        where: { email: profile.emails[0].value },
+      });
+
+      if (!user) {
+        user = await prisma.user.create({
+          data: {
+            email: profile.emails[0].value,
+            name: profile.displayName,
+            photo: profile.photos[0].value,
+            password: Math.random().toString(36).slice(-8), // Generate random password
+            role: "user",
+          },
+        });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error, false);
+    }
+  }
+);
+
+// Facebook OAuth Strategy
+// const facebookStrategy = new FacebookStrategy(
+//   {
+//     clientID: config.facebook.clientId,
+//     clientSecret: config.facebook.clientSecret,
+//     callbackURL: config.facebook.callbackURL,
+//     profileFields: ["id", "emails", "name", "picture.type(large)"],
+//   },
+//   async (accessToken, refreshToken, profile, done) => {
+//     try {
+//       let user = await prisma.user.findFirst({
+//         where: { email: profile.emails[0].value },
+//       });
+
+//       if (!user) {
+//         user = await prisma.user.create({
+//           data: {
+//             email: profile.emails[0].value,
+//             name: `${profile.name.givenName} ${profile.name.familyName}`,
+//             photo: profile.photos[0].value,
+//             password: Math.random().toString(36).slice(-8), // Generate random password
+//             role: "user",
+//           },
+//         });
+//       }
+
+//       return done(null, user);
+//     } catch (error) {
+//       return done(error, false);
+//     }
+//   }
+// );
+
 module.exports = {
   jwtStrategy,
+  googleStrategy,
+  // facebookStrategy,
 };
