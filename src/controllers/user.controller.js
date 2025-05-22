@@ -9,7 +9,7 @@ import {
 
 const getUsers = async (req, res) => {
   try {
-    const { page, limit, ...filter } = value;
+    const { page, limit, ...filter } = req.query;
     const result = await userService.queryUsers(filter, {
       page,
       limit,
@@ -17,7 +17,8 @@ const getUsers = async (req, res) => {
 
     responseApiSuccess(res, "Success get users", result);
   } catch (err) {
-    responseApiFailed(res, "Failed get users");
+    console.log(err);
+    responseApiFailed(res, `Failed get Users ${err}`);
   }
 };
 

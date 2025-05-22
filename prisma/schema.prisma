@@ -30,14 +30,20 @@ model Resep {
   kategoriId      Int
   tanggalUnggahan DateTime           @default(now())
   userId          Int
-  isApproved      Boolean            @default(false)
+  isApproved      StatusResep        @default(PENDING)
   tanggalAcc      DateTime?
   disetujuiOleh   Int?
   bahanList       Bahan[]
   langkahList     LangkahPembuatan[]
   admin           User?              @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
   kategori        Kategori           @relation(fields: [kategoriId], references: [id])
-  user            User               @relation("UserUploadResep", fields: [userId], references: [id])
+  user            User               @relation("UserUploadResep", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum StatusResep {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Kategori {
@@ -68,7 +74,7 @@ model Thread {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   messages Message[]
 }

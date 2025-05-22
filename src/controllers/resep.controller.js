@@ -7,7 +7,7 @@ import {
 
 const getReseps = async (req, res) => {
   try {
-    const { page, limit, ...filter } = value;
+    const { page, limit, ...filter } = req.query;
 
     const result = await resepService.queryReseps(filter, { page, limit });
     responseApiSuccess(res, "Success get reseps", result);

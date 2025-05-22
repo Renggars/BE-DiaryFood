@@ -10,7 +10,6 @@ const createResep = async (data) => {
         photoResep: data.photoResep,
         kategoriId: data.kategoriId,
         userId: data.userId,
-        isApproved: false,
       },
     });
 
@@ -50,7 +49,7 @@ const queryReseps = async (filter, options) => {
   const reseps = await prisma.resep.findMany({
     where: {
       ...filter,
-      isApproved: true,
+      isApproved: "APPROVED",
     },
     skip,
     take: limit,
@@ -70,7 +69,12 @@ const queryReseps = async (filter, options) => {
     },
   });
 
-  const totalItems = await prisma.resep.count({ where: filter });
+  const totalItems = await prisma.resep.count({
+    where: {
+      ...filter,
+      isApproved: "APPROVED",
+    },
+  });
   const totalPages = Math.ceil(totalItems / limit);
 
   return {

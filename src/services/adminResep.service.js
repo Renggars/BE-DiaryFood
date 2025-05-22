@@ -5,7 +5,7 @@ const getAllReseps = async ({ page = 1, limit = 10 }) => {
   const data = await prisma.resep.findMany({
     skip,
     take: parseInt(limit),
-    orderBy: { createdAt: "desc" },
+    orderBy: { tanggalUnggahan: "desc" },
     include: {
       bahanList: true,
       langkahList: {
@@ -30,10 +30,10 @@ const getAllReseps = async ({ page = 1, limit = 10 }) => {
 const getPendingReseps = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
   const data = await prisma.resep.findMany({
-    where: { isApproved: false },
+    where: { isApproved: "PENDING" },
     skip,
     take: parseInt(limit),
-    orderBy: { createdAt: "desc" },
+    orderBy: { tanggalUnggahan: "desc" },
     include: {
       bahanList: true,
       langkahList: {
@@ -44,7 +44,7 @@ const getPendingReseps = async ({ page = 1, limit = 10 }) => {
     },
   });
 
-  const total = await prisma.resep.count({ where: { status: "pending" } });
+  const total = await prisma.resep.count({ where: { isApproved: "PENDING" } });
   return {
     data,
     pagination: {
@@ -58,14 +58,14 @@ const getPendingReseps = async ({ page = 1, limit = 10 }) => {
 const approveResep = async (id) => {
   return prisma.resep.update({
     where: { id },
-    data: { isApproved: true },
+    data: { isApproved: "APPROVED" },
   });
 };
 
 const rejectResep = async (id) => {
   return prisma.resep.update({
     where: { id },
-    data: { isApproved: false },
+    data: { isApproved: "REJECTED" },
   });
 };
 

@@ -6,6 +6,7 @@ const getAllReseps = async (req, res) => {
     const data = await adminResepService.getAllReseps(req.query);
     responseApiSuccess(res, "Resep berhasil diambil", data);
   } catch (err) {
+    console.log(err);
     responseApiFailed(res, "Gagal ambil resep");
   }
 };
@@ -15,6 +16,7 @@ const getPendingReseps = async (req, res) => {
     const data = await adminResepService.getPendingReseps(req.query);
     responseApiSuccess(res, "Resep pending berhasil diambil", data);
   } catch (err) {
+    console.log(err);
     responseApiFailed(res, "Gagal ambil resep pending");
   }
 };
@@ -33,6 +35,7 @@ const rejectResep = async (req, res) => {
     const data = await adminResepService.rejectResep(parseInt(req.params.id));
     responseApiSuccess(res, "Resep berhasil direject", data);
   } catch (err) {
+    console.log(err);
     responseApiFailed(res, "Gagal reject resep");
   }
 };
