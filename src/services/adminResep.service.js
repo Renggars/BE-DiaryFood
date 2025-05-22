@@ -1,5 +1,31 @@
 const prisma = require("../../prisma");
-const { supabase } = require("../utils/supabase");
+
+const getAllReseps = async ({ page = 1, limit = 10 }) => {
+  const skip = (page - 1) * limit;
+  const data = await prisma.resep.findMany({
+    skip,
+    take: parseInt(limit),
+    orderBy: { createdAt: "desc" },
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
+  });
+
+  const total = await prisma.resep.count({ where: {} });
+  return {
+    data,
+    pagination: {
+      totalItems: total,
+      totalPages: Math.ceil(total / limit),
+      currentPage: parseInt(page),
+    },
+  };
+};
 
 const getPendingReseps = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
@@ -8,6 +34,14 @@ const getPendingReseps = async ({ page = 1, limit = 10 }) => {
     skip,
     take: parseInt(limit),
     orderBy: { createdAt: "desc" },
+    include: {
+      bahanList: true,
+      langkahList: {
+        orderBy: {
+          urutan: "asc",
+        },
+      },
+    },
   });
 
   const total = await prisma.resep.count({ where: { status: "pending" } });
@@ -36,6 +70,7 @@ const rejectResep = async (id) => {
 };
 
 module.exports = {
+  getAllReseps,
   getPendingReseps,
   approveResep,
   rejectResep,

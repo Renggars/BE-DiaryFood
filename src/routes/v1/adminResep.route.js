@@ -6,8 +6,10 @@ const adminResepController = require("../../controllers/adminResep.controller");
 
 const router = express.Router();
 
+router.route("/").get(auth(), authAcces(), adminResepController.getAllReseps);
+
 router
-  .route("/")
+  .route("/pending")
   .get(auth(), authAcces(), adminResepController.getPendingReseps);
 
 router

@@ -50,7 +50,10 @@ const queryReseps = async (filter, options) => {
   const skip = (page - 1) * limit;
 
   const reseps = await prisma.resep.findMany({
-    where: filter,
+    where: {
+      ...filter,
+      isApproved: true,
+    },
     skip,
     take: limit,
     include: {

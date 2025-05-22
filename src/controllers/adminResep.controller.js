@@ -4,6 +4,15 @@ const {
   responseApiFailed,
 } = require("../utils/responseApi");
 
+const getAllReseps = async (req, res) => {
+  try {
+    const data = await adminResepService.getAllReseps(req.query);
+    responseApiSuccess(res, "Resep berhasil diambil", data);
+  } catch (err) {
+    responseApiFailed(res, "Gagal ambil resep");
+  }
+};
+
 const getPendingReseps = async (req, res) => {
   try {
     const data = await adminResepService.getPendingReseps(req.query);
@@ -32,6 +41,7 @@ const rejectResep = async (req, res) => {
 };
 
 module.exports = {
+  getAllReseps,
   getPendingReseps,
   approveResep,
   rejectResep,
