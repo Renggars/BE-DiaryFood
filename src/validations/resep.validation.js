@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const bahanSchema = Joi.object({
   nama: Joi.string().required(),
@@ -59,10 +59,4 @@ const querySchema = Joi.object({
   isApproved: Joi.boolean().optional(),
 });
 
-module.exports = {
-  createResep,
-  getResep,
-  updateResep,
-  deleteResep,
-  querySchema,
-};
+export default { createResep, getResep, updateResep, deleteResep, querySchema };

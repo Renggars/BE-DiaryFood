@@ -1,7 +1,7 @@
-const app = require("./app");
-const config = require("./config/config");
-const logger = require("./config/logger");
-const prisma = require("../prisma/index");
+import app from "./app.js";
+import config from "./config/config.js";
+import logger from "./config/logger.js";
+import prisma from "../prisma/index.js";
 
 let server;
 

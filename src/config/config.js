@@ -1,9 +1,13 @@
-const dotenv = require("dotenv");
-const path = require("path");
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
-module.exports = {
+const config = {
   env: process.env.NODE_ENV,
   port: process.env.PORT,
   database: {
@@ -17,7 +21,9 @@ module.exports = {
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/v1/auth/google/callback",
+    callbackURL:
+      process.env.GOOGLE_CALLBACK_URL ||
+      "http://localhost:4000/v1/auth/google/callback",
   },
   // facebook: {
   //   clientId: process.env.FACEBOOK_CLIENT_ID,
@@ -26,3 +32,5 @@ module.exports = {
   // },
   clientUrl: process.env.CLIENT_URL || "http://localhost:3000",
 };
+
+export default config;

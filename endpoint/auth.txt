@@ -1,8 +1,0 @@
-http://127.0.0.1:3000/v1/auth/register
-
-{
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "password": "secret123"
-  "role": "user"
-}

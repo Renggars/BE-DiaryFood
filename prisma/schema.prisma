@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id             Int         @id @default(autoincrement())
-  name           String
-  email          String      @unique
-  password       String
-  role           Role        @default(user)
-  photo          String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
-  pencarian      Pencarian[]
-  resepDisetujui Resep[]     @relation("ResepDisetujuiAdmin")
-  resepDiunggah  Resep[]     @relation("UserUploadResep")
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(user)
+  photo     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  resepDisetujui Resep[]  @relation("ResepDisetujuiAdmin")
+  resepDiunggah  Resep[]  @relation("UserUploadResep")
+  Thread         Thread[]
 }
 
 model Resep {
@@ -33,7 +34,6 @@ model Resep {
   tanggalAcc      DateTime?
   disetujuiOleh   Int?
   bahanList       Bahan[]
-  hasilPencarian  HasilPencarian[]
   langkahList     LangkahPembuatan[]
   admin           User?              @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
   kategori        Kategori           @relation(fields: [kategoriId], references: [id])
@@ -62,21 +62,30 @@ model LangkahPembuatan {
   resep     Resep  @relation(fields: [resepId], references: [id], onDelete: Cascade)
 }
 
-model Pencarian {
-  id               Int              @id @default(autoincrement())
-  userId           Int
-  kataKunci        String
-  tanggalPencarian DateTime         @default(now())
-  hasilPencarian   HasilPencarian[]
-  user             User             @relation(fields: [userId], references: [id])
+model Thread {
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+
+  messages Message[]
 }
 
-model HasilPencarian {
-  id          Int       @id @default(autoincrement())
-  pencarianId Int
-  resepId     Int
-  pencarian   Pencarian @relation(fields: [pencarianId], references: [id])
-  resep       Resep     @relation(fields: [resepId], references: [id])
+model Message {
+  id        Int      @id @default(autoincrement())
+  role      RoleChat
+  content   String
+  thought   String?
+  createdAt DateTime @default(now())
+  threadId  Int
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+enum RoleChat {
+  user
+  assistant
 }
 
 enum Role {

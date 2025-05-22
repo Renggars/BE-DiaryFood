@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const resepId = {
   params: Joi.object().keys({
@@ -11,7 +11,4 @@ const querySchema = Joi.object().keys({
   limit: Joi.number().min(1).default(10),
 });
 
-module.exports = {
-  resepId,
-  querySchema,
-};
+export default { resepId, querySchema };

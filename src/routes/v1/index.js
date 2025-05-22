@@ -1,12 +1,13 @@
-const express = require("express");
-const authRoute = require("./auth.route");
-const userRoute = require("./user.route");
-const resepRoute = require("./resep.route");
-const kategoriRoute = require("./kategori.route");
-const pencarianRoute = require("./pencarian.route");
-const bahanRoute = require("./bahan.route");
-const langkahRoute = require("./langkah.route");
-const adminResepRoute = require("./adminResep.route");
+import express from "express";
+import authRoute from "./auth.route.js";
+import userRoute from "./user.route.js";
+import resepRoute from "./resep.route.js";
+import kategoriRoute from "./kategori.route.js";
+import bahanRoute from "./bahan.route.js";
+import langkahRoute from "./langkah.route.js";
+import adminResepRoute from "./adminResep.route.js";
+import threadRoute from "./thread.route.js";
+import messageRoute from "./message.route.js";
 
 const router = express.Router();
 
@@ -40,8 +41,12 @@ const defaultRoutes = [
     route: adminResepRoute,
   },
   {
-    path: "/pencarian",
-    route: pencarianRoute,
+    path: "/thread",
+    route: threadRoute,
+  },
+  {
+    path: "/message",
+    route: messageRoute,
   },
 ];
 
@@ -49,4 +54,4 @@ defaultRoutes.forEach((route) => {
   router.use(route.path, route.route);
 });
 
-module.exports = router;
+export default router;

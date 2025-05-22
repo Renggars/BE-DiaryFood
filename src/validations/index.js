@@ -1,9 +1,23 @@
-module.exports.authValidation = require("./auth.validation");
-module.exports.userValidation = require("./user.validation");
-module.exports.paginationValidation = require("./pagination.validation");
-module.exports.resepValidation = require("./resep.validation");
-module.exports.adminResepValidation = require("./adminResep.validation");
-module.exports.bahanValidation = require("./bahan.validation");
-module.exports.langkahValidation = require("./langkah.validation");
-module.exports.kategoriValidation = require("./kategori.validation");
-module.exports.pencarianValidation = require("./pencarian.validation");
+import authValidation from "./auth.validation.js";
+import userValidation from "./user.validation.js";
+import paginationValidation from "./pagination.validation.js";
+import resepValidation from "./resep.validation.js";
+import adminResepValidation from "./adminResep.validation.js";
+import bahanValidation from "./bahan.validation.js";
+import langkahValidation from "./langkah.validation.js";
+import kategoriValidation from "./kategori.validation.js";
+import threadValidation from "./thread.validation.js";
+import messageValidation from "./message.validation.js";
+
+export default {
+  authValidation,
+  userValidation,
+  paginationValidation,
+  resepValidation,
+  adminResepValidation,
+  bahanValidation,
+  langkahValidation,
+  kategoriValidation,
+  threadValidation,
+  messageValidation,
+};

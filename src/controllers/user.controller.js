@@ -1,19 +1,14 @@
-const userService = require("../services/user.service");
-const ApiError = require("../utils/ApiError");
-const {
+import userService from "../services/user.service.js";
+import ApiError from "../utils/ApiError.js";
+import httpStatus from "http-status";
+import {
   responseApiSuccess,
   responseApiFailed,
   responseApiCreateSuccess,
-} = require("../utils/responseApi");
-const userValidation = require("../validations/user.validation");
+} from "../utils/responseApi.js";
 
 const getUsers = async (req, res) => {
   try {
-    const { error, value } = userValidation.querySchema.validate(req.query);
-    if (error) {
-      throw error;
-    }
-
     const { page, limit, ...filter } = value;
     const result = await userService.queryUsers(filter, {
       page,
@@ -71,4 +66,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser };
+export default { getUsers, getUser, createUser, updateUser, deleteUser };

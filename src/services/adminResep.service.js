@@ -1,4 +1,4 @@
-const prisma = require("../../prisma");
+import prisma from "../../prisma/index.js";
 
 const getAllReseps = async ({ page = 1, limit = 10 }) => {
   const skip = (page - 1) * limit;
@@ -69,9 +69,4 @@ const rejectResep = async (id) => {
   });
 };
 
-module.exports = {
-  getAllReseps,
-  getPendingReseps,
-  approveResep,
-  rejectResep,
-};
+export default { getAllReseps, getPendingReseps, approveResep, rejectResep };

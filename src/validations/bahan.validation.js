@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const createBahan = {
   body: Joi.object().keys({
@@ -26,4 +26,4 @@ const deleteBahan = {
   }),
 };
 
-module.exports = { createBahan, updateBahan, deleteBahan };
+export default { createBahan, updateBahan, deleteBahan };

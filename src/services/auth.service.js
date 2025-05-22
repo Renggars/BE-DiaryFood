@@ -1,7 +1,7 @@
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
-const bcrypt = require("bcryptjs");
-const prisma = require("../../prisma");
+import httpStatus from "http-status";
+import ApiError from "../utils/ApiError.js";
+import bcrypt from "bcryptjs";
+import prisma from "../../prisma/index.js";
 
 /**
  * Login with username and password
@@ -28,6 +28,4 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   return userWithoutPassword;
 };
 
-module.exports = {
-  loginUserWithEmailAndPassword,
-};
+export default { loginUserWithEmailAndPassword };

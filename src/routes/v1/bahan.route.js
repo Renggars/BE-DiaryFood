@@ -1,8 +1,8 @@
-const express = require("express");
-const validate = require("../../middlewares/validate");
-const { auth } = require("../../middlewares/auth");
-const bahanValidation = require("../../validations/bahan.validation");
-const bahanController = require("../../controllers/bahan.controller");
+import express from "express";
+import validate from "../../middlewares/validate.js";
+import { auth } from "../../middlewares/auth.js";
+import bahanValidation from "../../validations/bahan.validation.js";
+import bahanController from "../../controllers/bahan.controller.js";
 
 const router = express.Router();
 
@@ -27,4 +27,4 @@ router
     bahanController.deleteBahan
   );
 
-module.exports = router;
+export default router;

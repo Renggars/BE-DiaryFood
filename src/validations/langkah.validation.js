@@ -1,5 +1,4 @@
-const Joi = require("joi");
-const { objectId } = require("./custom.validation");
+import Joi from "joi";
 
 const createLangkah = {
   body: Joi.object().keys({
@@ -27,4 +26,4 @@ const deleteLangkah = {
   }),
 };
 
-module.exports = { createLangkah, updateLangkah, deleteLangkah };
+export default { createLangkah, updateLangkah, deleteLangkah };

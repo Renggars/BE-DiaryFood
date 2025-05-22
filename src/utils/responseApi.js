@@ -33,7 +33,7 @@ const responseApiMethodNotAllowed = (res, data = {}) => {
   responseApi(res, false, 405, "Method Not Allowed", data);
 };
 
-module.exports = {
+export {
   responseApi,
   responseApiSuccess,
   responseApiCreateSuccess,

@@ -1,8 +1,5 @@
-const adminResepService = require("../services/adminResep.service");
-const {
-  responseApiSuccess,
-  responseApiFailed,
-} = require("../utils/responseApi");
+import adminResepService from "../services/adminResep.service.js";
+import { responseApiSuccess, responseApiFailed } from "../utils/responseApi.js";
 
 const getAllReseps = async (req, res) => {
   try {
@@ -40,9 +37,4 @@ const rejectResep = async (req, res) => {
   }
 };
 
-module.exports = {
-  getAllReseps,
-  getPendingReseps,
-  approveResep,
-  rejectResep,
-};
+export default { getAllReseps, getPendingReseps, approveResep, rejectResep };
