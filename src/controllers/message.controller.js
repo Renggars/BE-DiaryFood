@@ -24,12 +24,7 @@ const sendFirstMessage = async (req, res) => {
     const userId = req.user.id;
     const { content } = req.body;
 
-    console.log("[sendFirstMessage] userId:", userId);
-    console.log("[sendFirstMessage] content:", content);
-
     const message = await messageService.createMessage(userId, { content });
-
-    console.log("[sendFirstMessage] message and new thread created:", message);
 
     responseApiSuccess(res, "Message and new thread created", message);
   } catch (err) {

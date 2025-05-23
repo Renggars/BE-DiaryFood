@@ -15,6 +15,7 @@ import {
   googleStrategy,
   // facebookStrategy,
 } from "./config/passport.js";
+import setupSwagger from "./docs/swaggerConfig.js";
 
 const app = express();
 
@@ -63,6 +64,9 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 passport.use("google", googleStrategy);
 // passport.use("facebook", facebookStrategy);
+
+// Swagger route
+setupSwagger(app);
 
 // v1 api routes
 app.use("/v1", routes);

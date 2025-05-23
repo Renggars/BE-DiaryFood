@@ -56,8 +56,8 @@ const createUser = async (userBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async (filter, options) => {
-  const page = options.page || 1;
-  const limit = options.limit || 10;
+  const page = parseInt(options.page || 1);
+  const limit = parseInt(options.limit || 10);
   const skip = (page - 1) * limit;
 
   const users = await prisma.user.findMany({
@@ -85,10 +85,6 @@ const getUserByEmail = async (email) => {
   const user = await prisma.user.findUnique({
     where: { email },
   });
-
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
-  }
 
   return removePassword(user);
 };

@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const createMessage = {
   params: Joi.object().keys({
-    threadId: Joi.number().required(), // Validasi dari URL params
+    threadId: Joi.number().required(),
   }),
   body: Joi.object().keys({
     content: Joi.string().required(),

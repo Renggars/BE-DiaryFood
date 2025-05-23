@@ -69,8 +69,8 @@ const createResep = async (data) => {
 };
 
 const queryReseps = async (filter, options) => {
-  const page = options.page || 1;
-  const limit = options.limit || 10;
+  const page = parseInt(options.page || 1);
+  const limit = parseInt(options.limit || 10);
   const skip = (page - 1) * limit;
 
   const reseps = await prisma.resep.findMany({
