@@ -1,35 +1,47 @@
-// const supabase = require("./supabase");
-// const { v4: uuidv4 } = require("uuid");
-// const path = require("path");
+import { v4 as uuidv4 } from "uuid";
+import path from "path";
+import supabase from "./supabase.js";
 
-// /**
-//  * Fungsi untuk upload file ke Supabase Storage
-//  * @param {Object} file - File yang akan diupload (dari multer)
-//  * @param {String} bucketName - Nama bucket di Supabase
-//  * @returns {String} Public URL dari file yang diupload
-//  */
-// const uploadFile = async (file, bucketName) => {
-//   if (!file) {
-//     throw new Error("File tidak ditemukan.");
-//   }
+const extractFilenameFromUrl = (url) => {
+  return url?.split("/").pop();
+};
 
-//   const filename = `${uuidv4()}${path.extname(file.originalname)}`;
+const uploadFile = async (file, bucketName, oldFileUrl = null) => {
+  if (!file) {
+    throw new Error("File tidak ditemukan.");
+  }
 
-//   const { data, error } = await supabase.storage
-//     .from(bucketName)
-//     .upload(filename, file.buffer);
+  if (oldFileUrl) {
+    const oldFilename = extractFilenameFromUrl(oldFileUrl);
+    if (oldFilename) {
+      console.log("oldFilename: ", oldFilename);
+      const { error: removeError } = await supabase.storage
+        .from(bucketName)
+        .remove([oldFilename]);
 
-//   if (error) {
-//     throw new Error(
-//       `Gagal mengupload ke bucket ${bucketName}: ${error.message}`
-//     );
-//   }
+      if (removeError) {
+        console.warn("Gagal menghapus file lama:", removeError.message);
+      }
+    }
+  }
 
-//   const { data: publicUrlData } = supabase.storage
-//     .from(bucketName)
-//     .getPublicUrl(filename);
+  const newFilename = `${uuidv4()}${path.extname(file.originalname)}`;
 
-//   return publicUrlData.publicUrl;
-// };
+  const { error: uploadError } = await supabase.storage
+    .from(bucketName)
+    .upload(newFilename, file.buffer);
 
-// module.exports = uploadFile;
+  if (uploadError) {
+    throw new Error(
+      `Gagal mengupload ke bucket ${bucketName}: ${uploadError.message}`
+    );
+  }
+
+  const { data: publicUrlData } = supabase.storage
+    .from(bucketName)
+    .getPublicUrl(newFilename);
+
+  return publicUrlData.publicUrl;
+};
+
+export default uploadFile;

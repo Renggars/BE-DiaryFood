@@ -4,6 +4,4 @@ const removePassword = (user) => {
   return userWithoutPassword;
 };
 
-const removePasswords = (users) => users.map(removePassword);
-
-export { removePassword, removePasswords };
+export default removePassword;

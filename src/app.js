@@ -15,6 +15,7 @@ import {
   googleStrategy,
   // facebookStrategy,
 } from "./config/passport.js";
+import setupSwagger from "./docs/swaggerConfig.js";
 
 const app = express();
 
@@ -42,6 +43,18 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
+app.use((req, res, next) => {
+  const contentType = req.headers["content-type"] || "";
+  if (!contentType.startsWith("multipart/form-data")) {
+    express.json()(req, res, (err) => {
+      if (err) return next(err);
+      express.urlencoded({ extended: true })(req, res, next);
+    });
+  } else {
+    next();
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("hello world");
 });
@@ -51,6 +64,9 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 passport.use("google", googleStrategy);
 // passport.use("facebook", facebookStrategy);
+
+// Swagger route
+setupSwagger(app);
 
 // v1 api routes
 app.use("/v1", routes);

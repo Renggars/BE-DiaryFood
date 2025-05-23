@@ -1,6 +1,33 @@
 import httpStatus from "http-status";
 import prisma from "../../prisma/index.js";
 import ApiError from "../utils/ApiError.js";
+import uploadFile from "../utils/uploadFile.js";
+
+const uploadPhoto = async (file, oldFileUrl = null) => {
+  if (!file) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "File not found");
+  }
+
+  const photoUrl = await uploadFile(file, "photo-resep", oldFileUrl);
+  return photoUrl;
+};
+
+const updateResepPhoto = async (resepId, file) => {
+  const resep = await prisma.resep.findUnique({ where: { id: resepId } });
+
+  if (!resep) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Resep tidak ditemukan");
+  }
+
+  const newPhotoUrl = await uploadFile(file, "photo-resep", resep.photoResep);
+
+  const updated = await prisma.resep.update({
+    where: { id: resep.id },
+    data: { photoResep: newPhotoUrl },
+  });
+
+  return updated;
+};
 
 const createResep = async (data) => {
   return prisma.$transaction(async (tx) => {
@@ -42,8 +69,8 @@ const createResep = async (data) => {
 };
 
 const queryReseps = async (filter, options) => {
-  const page = options.page || 1;
-  const limit = options.limit || 10;
+  const page = parseInt(options.page || 1);
+  const limit = parseInt(options.limit || 10);
   const skip = (page - 1) * limit;
 
   const reseps = await prisma.resep.findMany({
@@ -104,9 +131,9 @@ const getResepById = async (id) => {
   return resep;
 };
 
-const updateResepById = async (id, updateBody) => {
-  const existing = await prisma.resep.findUnique({ where: { id } });
-  if (!existing) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+const updateResepById = async (id, updateBody, file) => {
+  const resep = await prisma.resep.findUnique({ where: { id } });
+  if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
   const operations = [];
 
@@ -180,6 +207,8 @@ const deleteResepById = async (id) => {
 };
 
 export default {
+  uploadPhoto,
+  updateResepPhoto,
   createResep,
   queryReseps,
   getResepById,
