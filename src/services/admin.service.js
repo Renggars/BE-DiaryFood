@@ -1,35 +1,25 @@
-const prisma = require("../../prisma");
-const { supabase } = require("../utils/supabase");
+import prisma from "../../prisma/index.js";
 
 const getDashboardData = async () => {
   try {
-    // Get total users count
     const totalUsers = await prisma.user.count();
+    console.log("Total users:", totalUsers);
 
-    // Get total recipes count
     const totalRecipes = await prisma.resep.count();
+    console.log("Total recipes:", totalRecipes);
 
-    // Get total categories count
     const totalCategories = await prisma.kategori.count();
-    // Get latest 5 recipes with their category and user information
+    console.log("Total categories:", totalCategories);
+
     const latestRecipes = await prisma.resep.findMany({
       take: 5,
-      where: {
-        isApproved: false,
-      },
+      where: { isApproved: "PENDING" },
       include: {
-        kategori: {
-          select: {
-            nama: true,
-          },
-        },
-        user: {
-          select: {
-            name: true,
-          },
-        },
+        kategori: { select: { nama: true } },
+        user: { select: { name: true } },
       },
     });
+    console.log("Latest recipes:", latestRecipes);
 
     return {
       totalUsers,
@@ -38,6 +28,7 @@ const getDashboardData = async () => {
       latestRecipes,
     };
   } catch (error) {
+    console.error("Error in getDashboardData:", error);
     throw error;
   }
 };
@@ -67,8 +58,7 @@ const getAllCategoriesData = async () => {
   }
 };
 
-module.exports = {
+export default {
   getDashboardData,
   getAllCategoriesData,
 };
-  

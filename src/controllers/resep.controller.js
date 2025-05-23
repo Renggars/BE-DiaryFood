@@ -1,9 +1,5 @@
 import resepService from "../services/resep.service.js";
-import {
-  responseApiSuccess,
-  responseApiFailed,
-  responseApiCreateSuccess,
-} from "../utils/responseApi.js";
+import { responseApiSuccess, responseApiFailed, responseApiCreateSuccess } from "../utils/responseApi.js";
 
 const getReseps = async (req, res) => {
   try {
@@ -38,10 +34,7 @@ const createResep = async (req, res) => {
 
 const updateResep = async (req, res) => {
   try {
-    const result = await resepService.updateResepById(
-      req.params.resepId,
-      req.body
-    );
+    const result = await resepService.updateResepById(req.params.resepId, req.body);
     responseApiSuccess(res, "Success update resep", result);
   } catch (err) {
     console.log(err);

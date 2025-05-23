@@ -1,4 +1,3 @@
-
 import express from "express";
 import authRoute from "./auth.route.js";
 import userRoute from "./user.route.js";
@@ -9,6 +8,7 @@ import langkahRoute from "./langkah.route.js";
 import adminResepRoute from "./adminResep.route.js";
 import threadRoute from "./thread.route.js";
 import messageRoute from "./message.route.js";
+import adminRoute from "./adminRoute.route.js";
 
 const router = express.Router();
 

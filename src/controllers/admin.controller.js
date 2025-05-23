@@ -1,5 +1,6 @@
-const { responseApiSuccess, responseApiFailed } = require("../utils/responseApi");
-const { getDashboardData, getAllCategoriesData } = require("../services/admin.service");
+import { responseApiSuccess, responseApiFailed } from "../utils/responseApi.js";
+import adminService from "../services/admin.service.js";
+const { getDashboardData, getAllCategoriesData } = adminService;
 
 const getDashboard = async (req, res) => {
   try {
@@ -25,7 +26,7 @@ const addCategory = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   getDashboard,
   getAllCategories,
   addCategory,
