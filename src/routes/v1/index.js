@@ -7,6 +7,7 @@ const pencarianRoute = require("./pencarian.route");
 const bahanRoute = require("./bahan.route");
 const langkahRoute = require("./langkah.route");
 const adminResepRoute = require("./adminResep.route");
+const adminRoute = require("./adminRoute");
 
 const router = express.Router();
 
@@ -34,6 +35,10 @@ const defaultRoutes = [
   {
     path: "/langkah",
     route: langkahRoute,
+  },
+  {
+    path: "/admin/dashboard",
+    route: adminRoute,
   },
   {
     path: "/admin/resep",
