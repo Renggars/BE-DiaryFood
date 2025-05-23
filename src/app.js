@@ -42,6 +42,18 @@ app.use(compression());
 app.use(cors());
 app.options("*", cors());
 
+app.use((req, res, next) => {
+  const contentType = req.headers["content-type"] || "";
+  if (!contentType.startsWith("multipart/form-data")) {
+    express.json()(req, res, (err) => {
+      if (err) return next(err);
+      express.urlencoded({ extended: true })(req, res, next);
+    });
+  } else {
+    next();
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("hello world");
 });

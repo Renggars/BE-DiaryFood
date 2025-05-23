@@ -1,25 +1,35 @@
 import Joi from "joi";
 import { password } from "./custom.validation.js";
 
+const uploadPhoto = Joi.object({
+  mimetype: Joi.string()
+    .valid("image/jpeg", "image/png", "image/webp")
+    .messages({
+      "any.only": "File harus berupa gambar (jpeg, png, webp)",
+    }),
+  size: Joi.number()
+    .max(5 * 1024 * 1024) // 5MB
+    .messages({
+      "number.max": "Ukuran file maksimal 5MB",
+    })
+    .required(),
+});
+
+const updateUserPhoto = {
+  params: Joi.object({
+    userId: Joi.number().integer().required(),
+  }),
+  file: uploadPhoto,
+};
+
 const createUser = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().custom(password).required(),
     role: Joi.string().valid("user", "admin").default("user"),
+    photo: Joi.string().optional(),
   }),
-  file: Joi.object({
-    mimetype: Joi.string()
-      .valid("image/jpeg", "image/png", "image/webp")
-      .messages({
-        "any.only": "File harus berupa gambar (jpeg, png, webp)",
-      }),
-    size: Joi.number()
-      .max(5 * 1024 * 1024) // 5MB
-      .messages({
-        "number.max": "Ukuran file maksimal 5MB",
-      }),
-  }).optional(),
 };
 
 const querySchema = Joi.object({
@@ -33,6 +43,12 @@ const getUser = {
   }),
 };
 
+const getUserByEmail = {
+  query: Joi.object().keys({
+    email: Joi.string().email().required(),
+  }),
+};
+
 const updateUser = {
   params: Joi.object().keys({
     userId: Joi.number().required(),
@@ -42,6 +58,7 @@ const updateUser = {
       name: Joi.string().optional(),
       email: Joi.string().email().optional(),
       role: Joi.string().valid("user", "admin").optional(),
+      photo: Joi.string().optional(),
     })
     .min(1),
 };
@@ -70,9 +87,12 @@ const loginUser = {
 // };
 
 export default {
+  uploadPhoto,
+  updateUserPhoto,
   createUser,
   querySchema,
   getUser,
+  getUserByEmail,
   updateUser,
   deleteUser,
   loginUser,

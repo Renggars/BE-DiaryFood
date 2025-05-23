@@ -2,21 +2,44 @@ import httpStatus from "http-status";
 import prisma from "../../prisma/index.js";
 import ApiError from "../utils/ApiError.js";
 import bcrypt from "bcryptjs";
-import { removePassword } from "../utils/sanitizeUser.js";
-// import uploadFile from "../utils/uploadFile.js";
+import removePassword from "../utils/sanitizeUser.js";
+import uploadFile from "../utils/uploadFile.js";
+
+const uploadPhoto = async (file) => {
+  if (!file) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "File tidak ditemukan");
+  }
+
+  const photoUrl = await uploadFile(file, "photo-user");
+  return photoUrl;
+};
+
+const updateUserPhoto = async (userId, file) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User tidak ditemukan");
+  }
+
+  const photoUrl = await uploadFile(file, "photo-user", user.photo);
+
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: { photo: photoUrl },
+  });
+
+  return updatedUser;
+};
 
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createUser = async (userBody, file) => {
+const createUser = async (userBody) => {
   const hashedPassword = bcrypt.hashSync(userBody.password, 8);
-
-  // let photoUrl = null;
-  // if (file) {
-  //   photoUrl = await uploadFile(file, "photo-user");
-  // }
 
   const newUser = await prisma.user.create({
     data: {
@@ -63,6 +86,10 @@ const getUserByEmail = async (email) => {
     where: { email },
   });
 
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
   return removePassword(user);
 };
 
@@ -77,6 +104,10 @@ const getUserById = async (userId) => {
       id: userId,
     },
   });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
 
   return removePassword(user);
 };
@@ -104,7 +135,7 @@ const updateUserById = async (userId, updateBody) => {
 };
 
 /**
- * Delete category by id
+ * Delete user by id
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
@@ -124,6 +155,8 @@ const deleteUserById = async (userId) => {
 };
 
 export default {
+  uploadPhoto,
+  updateUserPhoto,
   createUser,
   queryUsers,
   getUserById,

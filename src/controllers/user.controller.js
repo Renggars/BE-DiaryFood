@@ -7,6 +7,46 @@ import {
   responseApiCreateSuccess,
 } from "../utils/responseApi.js";
 
+const uploadPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "File not found");
+    }
+
+    const photoUrl = await userService.uploadPhoto(req.file);
+
+    responseApiSuccess(res, "Success upload photo", photoUrl);
+  } catch (err) {
+    responseApiFailed(res, `Failed upload photo ${err}`);
+  }
+};
+
+const updateUserPhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "File tidak ditemukan" });
+    }
+
+    const result = await userService.updateUserPhoto(
+      req.params.userId,
+      req.file
+    );
+    responseApiSuccess(res, "Berhasil memperbarui foto user", result);
+  } catch (err) {
+    console.log(err);
+    responseApiFailed(res, `Gagal memperbarui foto user: ${err.message}`);
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    const result = await userService.createUser(req.body);
+    responseApiCreateSuccess(res, "Success create user", result);
+  } catch (err) {
+    responseApiFailed(res, `Failed create user ${err}`);
+  }
+};
+
 const getUsers = async (req, res) => {
   try {
     const { page, limit, ...filter } = req.query;
@@ -17,7 +57,6 @@ const getUsers = async (req, res) => {
 
     responseApiSuccess(res, "Success get users", result);
   } catch (err) {
-    console.log(err);
     responseApiFailed(res, `Failed get Users ${err}`);
   }
 };
@@ -25,19 +64,19 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const result = await userService.getUserById(req.params.userId);
-    console.log(result);
     responseApiSuccess(res, "Success get user", result);
   } catch (err) {
-    responseApiFailed(res, "Failed get user");
+    responseApiFailed(res, `Failed get user ${err}`);
   }
 };
 
-const createUser = async (req, res) => {
+const getUserByEmail = async (req, res) => {
   try {
-    const result = await userService.createUser(req.body, req.file);
-    responseApiCreateSuccess(res, "Success create user", result);
+    const { email } = req.query;
+    const result = await userService.getUserByEmail(email);
+    responseApiSuccess(res, "Success get user", result);
   } catch (err) {
-    responseApiFailed(res, "Failed create user");
+    responseApiFailed(res, `Failed get user ${err}`);
   }
 };
 
@@ -47,13 +86,14 @@ const updateUser = async (req, res) => {
       req.params.userId,
       req.body
     );
+
     if (!result) {
       throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     }
     responseApiSuccess(res, "Success update user", result);
   } catch (err) {
     console.log(err);
-    responseApiFailed(res, "Failed update user");
+    responseApiFailed(res, `Failed update user ${err}`);
   }
 };
 
@@ -63,8 +103,17 @@ const deleteUser = async (req, res) => {
     responseApiSuccess(res, "Success delete user", result);
   } catch (err) {
     console.log(err);
-    responseApiFailed(res, "Failed delete user");
+    responseApiFailed(res, `Failed delete user ${err}`);
   }
 };
 
-export default { getUsers, getUser, createUser, updateUser, deleteUser };
+export default {
+  updateUserPhoto,
+  uploadPhoto,
+  getUsers,
+  getUser,
+  getUserByEmail,
+  createUser,
+  updateUser,
+  deleteUser,
+};

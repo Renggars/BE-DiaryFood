@@ -1,5 +1,25 @@
 import Joi from "joi";
 
+const uploadPhoto = Joi.object({
+  mimetype: Joi.string()
+    .valid("image/jpeg", "image/png", "image/webp")
+    .messages({
+      "any.only": "File harus berupa gambar (jpeg, png, webp)",
+    }),
+  size: Joi.number()
+    .max(5 * 1024 * 1024) // 5MB
+    .messages({
+      "number.max": "Ukuran file maksimal 5MB",
+    }),
+});
+
+const updateResepPhoto = {
+  params: Joi.object({
+    resepId: Joi.number().integer().required(),
+  }),
+  file: uploadPhoto,
+};
+
 const bahanSchema = Joi.object({
   nama: Joi.string().required(),
   jumlah: Joi.string().required(),
@@ -13,7 +33,7 @@ const langkahPembuatanSchema = Joi.object({
 const createResep = {
   body: Joi.object({
     nama: Joi.string().required(),
-    photoResep: Joi.string().uri().optional().allow(null, ""),
+    photoResep: Joi.string().optional(),
     kategoriId: Joi.number().integer().required(),
     userId: Joi.number().integer().required(),
     bahan: Joi.array().items(bahanSchema).min(1).required(),
@@ -21,7 +41,7 @@ const createResep = {
       .items(langkahPembuatanSchema)
       .min(1)
       .required(),
-  }),
+  }).min(1),
 };
 
 const updateResep = {
@@ -30,7 +50,7 @@ const updateResep = {
   }),
   body: Joi.object({
     nama: Joi.string().optional(),
-    photoResep: Joi.string().uri().optional().allow(null, ""),
+    photoResep: Joi.string().optional(),
     kategoriId: Joi.number().integer().optional(),
     userId: Joi.number().integer().optional(),
     isApproved: Joi.string()
@@ -63,4 +83,12 @@ const querySchema = Joi.object({
     .default("PENDING"),
 });
 
-export default { createResep, getResep, updateResep, deleteResep, querySchema };
+export default {
+  uploadPhoto,
+  updateResepPhoto,
+  createResep,
+  getResep,
+  updateResep,
+  deleteResep,
+  querySchema,
+};
