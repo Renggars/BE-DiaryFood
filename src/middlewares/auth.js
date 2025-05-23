@@ -1,7 +1,6 @@
-const passport = require("passport");
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
-const { error } = require("winston");
+import passport from "passport";
+import httpStatus from "http-status";
+import ApiError from "../utils/ApiError.js";
 
 const verifyCallback = (req, resolve, reject) => async (err, user, info) => {
   if (err || info || !user) {
@@ -32,14 +31,14 @@ const authAcces = () => async (req, res, next) => {
       verifyCallback(req, resolve, reject)
     )(req, res, next);
   })
-  .then(() => {
-    if (req.user.role === "admin") {
-      next();
-    } else {
-      throw new ApiError(httpStatus.FORBIDDEN, "Acces Denied");
-    }
-  })
-  .catch((err) => next(err))
+    .then(() => {
+      if (req.user.role === "admin") {
+        next();
+      } else {
+        throw new ApiError(httpStatus.FORBIDDEN, "Acces Denied");
+      }
+    })
+    .catch((err) => next(err));
 };
 
-module.exports = { auth, authAcces };
+export { auth, authAcces };

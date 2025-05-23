@@ -1,9 +1,9 @@
-const langkahService = require("../services/langkah.service");
-const {
+import langkahService from "../services/langkah.service.js";
+import {
   responseApiSuccess,
   responseApiFailed,
   responseApiCreateSuccess,
-} = require("../utils/responseApi");
+} from "../utils/responseApi.js";
 
 const createLangkah = async (req, res) => {
   try {
@@ -37,4 +37,4 @@ const deleteLangkah = async (req, res) => {
   }
 };
 
-module.exports = { createLangkah, updateLangkah, deleteLangkah };
+export default { createLangkah, updateLangkah, deleteLangkah };

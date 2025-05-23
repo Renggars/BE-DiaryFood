@@ -1,9 +1,9 @@
-const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
-// const { Strategy: FacebookStrategy } = require("passport-facebook");
-const config = require("./config");
-const { tokenTypes } = require("./tokens");
-const prisma = require("../../prisma/index");
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+// import { Strategy as FacebookStrategy } from "passport-facebook";
+import config from "./config.js";
+import { tokenTypes } from "./tokens.js";
+import prisma from "../../prisma/index.js";
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -92,7 +92,7 @@ const googleStrategy = new GoogleStrategy(
 //   }
 // );
 
-module.exports = {
+export {
   jwtStrategy,
   googleStrategy,
   // facebookStrategy,

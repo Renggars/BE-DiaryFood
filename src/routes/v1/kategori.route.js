@@ -1,8 +1,8 @@
-const express = require("express");
-const validate = require("../../middlewares/validate");
-const kategoriValidation = require("../../validations/kategori.validation");
-const kategoriController = require("../../controllers/kategori.controller");
-const { auth, authAcces } = require("../../middlewares/auth");
+import express from "express";
+import validate from "../../middlewares/validate.js";
+import kategoriValidation from "../../validations/kategori.validation.js";
+import kategoriController from "../../controllers/kategori.controller.js";
+import { auth, authAcces } from "../../middlewares/auth.js";
 
 const router = express.Router();
 
@@ -32,4 +32,4 @@ router
     kategoriController.deleteKategori
   );
 
-module.exports = router;
+export default router;

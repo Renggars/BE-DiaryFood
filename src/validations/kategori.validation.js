@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const createKategori = {
   body: Joi.object().keys({
@@ -29,9 +29,4 @@ const deleteKategori = {
   }),
 };
 
-module.exports = {
-  createKategori,
-  updateKategori,
-  deleteKategori,
-  getKategori,
-};
+export default { createKategori, updateKategori, deleteKategori, getKategori };

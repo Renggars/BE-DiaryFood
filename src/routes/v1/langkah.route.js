@@ -1,8 +1,8 @@
-const express = require("express");
-const validate = require("../../middlewares/validate");
-const { auth } = require("../../middlewares/auth");
-const langkahValidation = require("../../validations/langkah.validation");
-const langkahController = require("../../controllers/langkah.controller");
+import express from "express";
+import validate from "../../middlewares/validate.js";
+import { auth } from "../../middlewares/auth.js";
+import langkahValidation from "../../validations/langkah.validation.js";
+import langkahController from "../../controllers/langkah.controller.js";
 
 const router = express.Router();
 
@@ -27,4 +27,4 @@ router
     langkahController.deleteLangkah
   );
 
-module.exports = router;
+export default router;

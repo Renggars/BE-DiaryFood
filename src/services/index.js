@@ -1,9 +1,21 @@
-module.exports.authService = require("./auth.service");
-module.exports.tokenService = require("./token.service");
-module.exports.userService = require("./user.service");
-module.exports.KategoriService = require("./kategori.service");
-module.exports.resepService = require("./resep.service");
-module.exports.bahanService = require("./bahan.service");
-module.exports.langkahService = require("./langkah.service");
-module.exports.pencarianService = require("./pencarian.service");
-module.exports.adminResepService = require("./adminResep.service");
+import authService from "./auth.service.js";
+import tokenService from "./token.service.js";
+import userService from "./user.service.js";
+import KategoriService from "./kategori.service.js";
+import resepService from "./resep.service.js";
+import bahanService from "./bahan.service.js";
+import langkahService from "./langkah.service.js";
+import pencarianService from "./pencarian.service.js";
+import adminResepService from "./adminResep.service.js";
+
+export default {
+  authService,
+  tokenService,
+  userService,
+  KategoriService,
+  resepService,
+  bahanService,
+  langkahService,
+  pencarianService,
+  adminResepService,
+};

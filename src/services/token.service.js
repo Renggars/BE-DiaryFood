@@ -1,8 +1,7 @@
-const jwt = require("jsonwebtoken");
-const moment = require("moment");
-const config = require("../config/config");
-const { tokenTypes } = require("../config/tokens");
-const prisma = require("../../prisma/index");
+import jwt from "jsonwebtoken";
+import moment from "moment";
+import config from "../config/config.js";
+import { tokenTypes } from "../config/tokens.js";
 
 /**
  * Generate token
@@ -80,8 +79,4 @@ const generateAuthTokens = (user) => {
   };
 };
 
-module.exports = {
-  generateToken,
-  verifyToken,
-  generateAuthTokens,
-};
+export default { generateToken, verifyToken, generateAuthTokens };

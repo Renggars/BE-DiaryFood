@@ -6,4 +6,4 @@ const removePassword = (user) => {
 
 const removePasswords = (users) => users.map(removePassword);
 
-module.exports = { removePassword, removePasswords };
+export { removePassword, removePasswords };

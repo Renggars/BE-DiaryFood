@@ -1,6 +1,6 @@
-const httpStatus = require("http-status");
-const prisma = require("../../prisma");
-const ApiError = require("../utils/ApiError");
+import httpStatus from "http-status";
+import prisma from "../../prisma/index.js";
+import ApiError from "../utils/ApiError.js";
 
 const createKategori = async (body) => {
   const kategori = await prisma.kategori.create({
@@ -55,7 +55,7 @@ const deleteKategoriById = async (id) => {
   });
 };
 
-module.exports = {
+export default {
   createKategori,
   getKategoris,
   getKategoriById,

@@ -1,13 +1,13 @@
-const express = require("express");
-const validate = require("../../middlewares/validate");
-const { auth, authAcces } = require("../../middlewares/auth");
-const adminResepValidation = require("../../validations/adminResep.validation");
-const adminResepController = require("../../controllers/adminResep.controller");
-const adminController = require("../../controllers/adminController");
-
+import express from "express";
+import validate from "../../middlewares/validate.js";
+import { auth, authAcces } from "../../middlewares/auth.js";
+import adminResepValidation from "../../validations/adminResep.validation.js";
+import adminResepController from "../../controllers/adminResep.controller.js";
 const router = express.Router();
 
+router.route("/").get(auth(), authAcces(), adminResepController.getAllReseps);
 
+router.route("/pending").get(auth(), authAcces(), adminResepController.getPendingReseps);
 
 router.route("/").get(auth(), authAcces(), adminResepController.getPendingReseps);
 
@@ -15,4 +15,4 @@ router.route("/:id/approve").put(validate(adminResepValidation.resepId), adminRe
 
 router.route("/:id/reject").put(validate(adminResepValidation.resepId), adminResepController.rejectResep);
 
-module.exports = router;
+export default router;

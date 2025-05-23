@@ -1,9 +1,9 @@
-const httpStatus = require("http-status");
-const prisma = require("../../prisma/index");
-const ApiError = require("../utils/ApiError");
-const bcrypt = require("bcryptjs");
-const { removePassword } = require("../utils/sanitizeUser");
-const uploadFile = require("../utils/uploadFile");
+import httpStatus from "http-status";
+import prisma from "../../prisma/index.js";
+import ApiError from "../utils/ApiError.js";
+import bcrypt from "bcryptjs";
+import { removePassword } from "../utils/sanitizeUser.js";
+// import uploadFile from "../utils/uploadFile.js";
 
 /**
  * Create a user
@@ -13,10 +13,10 @@ const uploadFile = require("../utils/uploadFile");
 const createUser = async (userBody, file) => {
   const hashedPassword = bcrypt.hashSync(userBody.password, 8);
 
-  let photoUrl = null;
-  if (file) {
-    photoUrl = await uploadFile(file, "photo-user");
-  }
+  // let photoUrl = null;
+  // if (file) {
+  //   photoUrl = await uploadFile(file, "photo-user");
+  // }
 
   const newUser = await prisma.user.create({
     data: {
@@ -123,7 +123,7 @@ const deleteUserById = async (userId) => {
   return deleteUser;
 };
 
-module.exports = {
+export default {
   createUser,
   queryUsers,
   getUserById,

@@ -1,6 +1,6 @@
-const prisma = require("../../prisma");
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
+import prisma from "../../prisma/index.js";
+import httpStatus from "http-status";
+import ApiError from "../utils/ApiError.js";
 
 const createLangkah = async (langkah) => {
   return prisma.langkahPembuatan.create({ data: langkah });
@@ -31,4 +31,4 @@ const deleteLangkahById = async (langkahId) => {
   });
 };
 
-module.exports = { createLangkah, updateLangkahById, deleteLangkahById };
+export default { createLangkah, updateLangkahById, deleteLangkahById };

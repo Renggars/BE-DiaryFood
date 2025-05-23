@@ -1,16 +1,20 @@
-const express = require("express");
-const httpStatus = require("http-status");
-const routes = require("./routes/v1");
-const config = require("./config/config");
-const morgan = require("./config/morgan");
-const { errorConverter, errorHandler } = require("./middlewares/error");
-const ApiError = require("./utils/ApiError");
-const helmet = require("helmet");
-const xss = require("xss-clean");
-const compression = require("compression");
-const cors = require("cors");
-const passport = require("passport");
-const { jwtStrategy, googleStrategy, facebookStrategy } = require("./config/passport");
+import express from "express";
+import httpStatus from "http-status";
+import routes from "./routes/v1/index.js";
+import config from "./config/config.js";
+import morgan from "./config/morgan.js";
+import { errorConverter, errorHandler } from "./middlewares/error.js";
+import ApiError from "./utils/ApiError.js";
+import helmet from "helmet";
+import xss from "xss-clean";
+import compression from "compression";
+import cors from "cors";
+import passport from "passport";
+import {
+  jwtStrategy,
+  googleStrategy,
+  // facebookStrategy,
+} from "./config/passport.js";
 
 const app = express();
 
@@ -62,4 +66,4 @@ app.use(errorConverter);
 // handle error
 app.use(errorHandler);
 
-module.exports = app;
+export default app;

@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const bahanSchema = Joi.object({
   nama: Joi.string().required(),
@@ -33,7 +33,9 @@ const updateResep = {
     photoResep: Joi.string().uri().optional().allow(null, ""),
     kategoriId: Joi.number().integer().optional(),
     userId: Joi.number().integer().optional(),
-    isApproved: Joi.boolean().optional(),
+    isApproved: Joi.string()
+      .valid("APPROVED", "REJECTED", "PENDING")
+      .default("PENDING"),
     bahan: Joi.array().items(bahanSchema).optional(),
     langkahPembuatan: Joi.array().items(langkahPembuatanSchema).optional(),
   }).min(1),
@@ -56,13 +58,9 @@ const querySchema = Joi.object({
   limit: Joi.number().integer().min(1).default(10),
   kategoriId: Joi.number().integer().optional(),
   userId: Joi.number().integer().optional(),
-  isApproved: Joi.boolean().optional(),
+  isApproved: Joi.string()
+    .valid("APPROVED", "REJECTED", "PENDING")
+    .default("PENDING"),
 });
 
-module.exports = {
-  createResep,
-  getResep,
-  updateResep,
-  deleteResep,
-  querySchema,
-};
+export default { createResep, getResep, updateResep, deleteResep, querySchema };

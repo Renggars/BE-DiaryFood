@@ -1,8 +1,5 @@
-const bahanService = require("../services/bahan.service");
-const {
-  responseApiSuccess,
-  responseApiFailed,
-} = require("../utils/responseApi");
+import bahanService from "../services/bahan.service.js";
+import { responseApiSuccess, responseApiFailed } from "../utils/responseApi.js";
 
 const createBahan = async (req, res) => {
   try {
@@ -37,4 +34,4 @@ const deleteBahan = async (req, res) => {
   }
 };
 
-module.exports = { createBahan, updateBahan, deleteBahan };
+export default { createBahan, updateBahan, deleteBahan };

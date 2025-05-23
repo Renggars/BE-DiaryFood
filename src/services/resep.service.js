@@ -1,8 +1,6 @@
-// File: services/resep.service.js
-const httpStatus = require("http-status");
-const prisma = require("../../prisma/index");
-const ApiError = require("../utils/ApiError");
-const { lang } = require("moment");
+import httpStatus from "http-status";
+import prisma from "../../prisma/index.js";
+import ApiError from "../utils/ApiError.js";
 
 const createResep = async (data) => {
   return prisma.$transaction(async (tx) => {
@@ -12,7 +10,6 @@ const createResep = async (data) => {
         photoResep: data.photoResep,
         kategoriId: data.kategoriId,
         userId: data.userId,
-        isApproved: false,
       },
     });
 
@@ -50,7 +47,10 @@ const queryReseps = async (filter, options) => {
   const skip = (page - 1) * limit;
 
   const reseps = await prisma.resep.findMany({
-    where: filter,
+    where: {
+      ...filter,
+      isApproved: "APPROVED",
+    },
     skip,
     take: limit,
     include: {
@@ -69,7 +69,12 @@ const queryReseps = async (filter, options) => {
     },
   });
 
-  const totalItems = await prisma.resep.count({ where: filter });
+  const totalItems = await prisma.resep.count({
+    where: {
+      ...filter,
+      isApproved: "APPROVED",
+    },
+  });
   const totalPages = Math.ceil(totalItems / limit);
 
   return {
@@ -119,7 +124,9 @@ const updateResepById = async (id, updateBody) => {
   }
 
   if (updateBody.langkahPembuatan) {
-    operations.push(prisma.langkahPembuatan.deleteMany({ where: { resepId: id } }));
+    operations.push(
+      prisma.langkahPembuatan.deleteMany({ where: { resepId: id } })
+    );
     operations.push(
       prisma.langkahPembuatan.createMany({
         data: updateBody.langkahPembuatan.map((langkah) => ({
@@ -158,7 +165,8 @@ const updateResepById = async (id, updateBody) => {
 
 const deleteResepById = async (id) => {
   const existingResep = await prisma.resep.findUnique({ where: { id } });
-  if (!existingResep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  if (!existingResep)
+    throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
   return prisma.resep.delete({
     where: { id },
@@ -173,7 +181,7 @@ const deleteResepById = async (id) => {
   });
 };
 
-module.exports = {
+export default {
   createResep,
   queryReseps,
   getResepById,

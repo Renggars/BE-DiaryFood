@@ -1,20 +1,15 @@
-const userService = require("../services/user.service");
-const ApiError = require("../utils/ApiError");
-const {
+import userService from "../services/user.service.js";
+import ApiError from "../utils/ApiError.js";
+import httpStatus from "http-status";
+import {
   responseApiSuccess,
   responseApiFailed,
   responseApiCreateSuccess,
-} = require("../utils/responseApi");
-const userValidation = require("../validations/user.validation");
+} from "../utils/responseApi.js";
 
 const getUsers = async (req, res) => {
   try {
-    const { error, value } = userValidation.querySchema.validate(req.query);
-    if (error) {
-      throw error;
-    }
-
-    const { page, limit, ...filter } = value;
+    const { page, limit, ...filter } = req.query;
     const result = await userService.queryUsers(filter, {
       page,
       limit,
@@ -22,7 +17,8 @@ const getUsers = async (req, res) => {
 
     responseApiSuccess(res, "Success get users", result);
   } catch (err) {
-    responseApiFailed(res, "Failed get users");
+    console.log(err);
+    responseApiFailed(res, `Failed get Users ${err}`);
   }
 };
 
@@ -71,4 +67,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser };
+export default { getUsers, getUser, createUser, updateUser, deleteUser };

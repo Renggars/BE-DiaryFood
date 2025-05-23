@@ -1,17 +1,13 @@
-const resepService = require("../services/resep.service");
-const {
+import resepService from "../services/resep.service.js";
+import {
   responseApiSuccess,
   responseApiFailed,
   responseApiCreateSuccess,
-} = require("../utils/responseApi");
-const resepValidation = require("../validations/resep.validation");
+} from "../utils/responseApi.js";
 
 const getReseps = async (req, res) => {
   try {
-    const { error, value } = resepValidation.querySchema.validate(req.query);
-    if (error) throw error;
-
-    const { page, limit, ...filter } = value;
+    const { page, limit, ...filter } = req.query;
 
     const result = await resepService.queryReseps(filter, { page, limit });
     responseApiSuccess(res, "Success get reseps", result);
@@ -62,10 +58,4 @@ const deleteResep = async (req, res) => {
   }
 };
 
-module.exports = {
-  getReseps,
-  getResep,
-  createResep,
-  updateResep,
-  deleteResep,
-};
+export default { getReseps, getResep, createResep, updateResep, deleteResep };

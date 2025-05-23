@@ -1,6 +1,6 @@
-const prisma = require("../../prisma");
-const httpStatus = require("http-status");
-const ApiError = require("../utils/ApiError");
+import prisma from "../../prisma/index.js";
+import httpStatus from "http-status";
+import ApiError from "../utils/ApiError.js";
 
 const createBahan = async (bahan) => {
   return prisma.bahan.create({ data: bahan });
@@ -32,4 +32,4 @@ const deleteBahanById = async (bahanId) => {
   });
 };
 
-module.exports = { createBahan, updateBahanById, deleteBahanById };
+export default { createBahan, updateBahanById, deleteBahanById };
