@@ -58,6 +58,16 @@ const getAllCategoriesData = async () => {
   }
 };
 
+//  const getPendingRecipes = async ()=>{
+//   try {
+
+//     const pendingRecipes = await 
+    
+//   } catch (error) {
+//     throw error;
+//   }
+//  }
+
 export default {
   getDashboardData,
   getAllCategoriesData,

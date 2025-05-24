@@ -35,6 +35,18 @@ const getPendingReseps = async ({ page = 1, limit = 10 }) => {
     take: parseInt(limit),
     orderBy: { tanggalUnggahan: "desc" },
     include: {
+      user:{
+        select: {
+          id:true,
+          name: true
+        }
+      },
+      kategori:{
+        select:{
+          nama:true,
+
+        }
+      },
       bahanList: true,
       langkahList: {
         orderBy: {

@@ -119,6 +119,12 @@ const getResepById = async (id) => {
   const resep = await prisma.resep.findUnique({
     where: { id },
     include: {
+      user: {
+        select:{
+          name:true,
+          photo:true
+        }
+      },
       bahanList: true,
       langkahList: {
         orderBy: {

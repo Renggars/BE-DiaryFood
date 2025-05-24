@@ -7,6 +7,8 @@ import kategoriController from "../../controllers/kategori.controller.js";
 import resepController from "../../controllers/resep.controller.js";
 import { auth, authAcces } from "../../middlewares/auth.js";
 import resepValidation from "../../validations/resep.validation.js";
+import adminResepController from "../../controllers/adminResep.controller.js";
+import adminResepValidation from "../../validations/adminResep.validation.js";
 
 const router = express.Router();
 
@@ -19,6 +21,12 @@ router.route("/categories/:kategoriId").delete(auth(), authAcces(), validate(kat
 
 // recipe
 router.route("/recipes").get(auth(), authAcces(), resepController.getReseps);
-router.route("/recipes/:resepId").get(auth(), authAcces(), validate(resepValidation.getResep), resepController.getResep);
+router.route("/recipes/:resepId").get(auth(), authAcces(), validate(resepValidation.getResep), resepController.getResep).delete(auth(), authAcces(),validate(resepValidation.deleteResep), resepController.deleteResep);
+
+
+//approve recipe page
+router.route("/pending-recipes").get(auth(), authAcces(), adminResepController.getPendingReseps);
+router.route("/pending-recipes/:id/approve").put(auth(), authAcces(),validate(adminResepValidation.resepId), adminResepController.approveResep);
+router.route("/pending-recipes/:id/reject").put(auth(), authAcces(),validate(adminResepValidation.resepId), adminResepController.rejectResep);
 
 export default router;

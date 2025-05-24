@@ -26,6 +26,8 @@ const addCategory = async (req, res) => {
   }
 };
 
+
+
 export default {
   getDashboard,
   getAllCategories,
