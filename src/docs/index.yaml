@@ -591,7 +591,7 @@ paths:
                     items:
                       type: object
 
-  /{resepId}/save:
+  /resep/{resepId}/save:
     post:
       tags:
         - Resep
@@ -612,7 +612,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Resep berhasil disimpan
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 4
+                      userId:
+                        type: integer
+                        example: 2
+                      resepId:
+                        type: integer
+                        example: 5
+                      savedAt:
+                        type: string
+                        format: date-time
+                        example: "2025-05-27T13:09:40.084Z"
         400:
           description: Resep sudah disimpan sebelumnya
         401:
@@ -620,7 +646,89 @@ paths:
         404:
           description: Resep tidak ditemukan
 
-  /{resepId}/unsave:
+  /resep/saved:
+    get:
+      tags:
+        - Resep
+      summary: Ambil semua resep yang disimpan oleh user
+      description: Mengambil daftar semua resep yang disimpan oleh user yang sedang login.
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Berhasil mengambil resep yang disimpan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Berhasil mengambil resep yang disimpan
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 5
+                        userId:
+                          type: integer
+                          example: 4
+                        resepId:
+                          type: integer
+                          example: 5
+                        savedAt:
+                          type: string
+                          format: date-time
+                          example: "2025-05-27T13:11:50.765Z"
+                        resep:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 5
+                            nama:
+                              type: string
+                              example: Salad Buah 500
+                            photoResep:
+                              type: string
+                              nullable: true
+                              example: null
+                            kategoriId:
+                              type: integer
+                              example: 2
+                            tanggalUnggahan:
+                              type: string
+                              format: date-time
+                              example: "2025-05-27T12:54:59.950Z"
+                            userId:
+                              type: integer
+                              example: 2
+                            isApproved:
+                              type: string
+                              enum: [PENDING, APPROVED, REJECTED]
+                              example: PENDING
+                            tanggalAcc:
+                              type: string
+                              format: date-time
+                              nullable: true
+                              example: null
+                            disetujuiOleh:
+                              type: string
+                              nullable: true
+                              example: null
+        401:
+          description: Tidak terautentikasi
+
+  /resep/{resepId}/unsave:
     delete:
       tags:
         - Resep
@@ -641,7 +749,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Resep berhasil dihapus dari simpanan
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      userId:
+                        type: integer
+                        example: 2
+                      resepId:
+                        type: integer
+                        example: 2
+                      savedAt:
+                        type: string
+                        format: date-time
+                        example: "2025-05-27T13:08:46.487Z"
         401:
           description: Tidak terautentikasi
         404:
