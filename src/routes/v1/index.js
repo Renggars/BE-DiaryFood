@@ -9,6 +9,9 @@ import adminResepRoute from "./adminResep.route.js";
 import threadRoute from "./thread.route.js";
 import messageRoute from "./message.route.js";
 import adminRoute from "./adminRoute.route.js";
+import profile from "./profile.route.js";
+import feedbackRoute from "./feedback.route.js";
+import path from "path";
 
 const router = express.Router();
 
@@ -40,6 +43,14 @@ const defaultRoutes = [
   {
     path: "/admin/dashboard",
     route: adminRoute,
+  },
+  {
+    path: "/profile",
+    route: profile,
+  },
+  {
+    path: "/feedbacks",
+    route: feedbackRoute,
   },
   {
     path: "/admin/resep",

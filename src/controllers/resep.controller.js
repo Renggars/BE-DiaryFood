@@ -20,10 +20,7 @@ const updateResepPhoto = async (req, res) => {
       return res.status(400).json({ message: "File foto tidak ditemukan" });
     }
 
-    const updatedResep = await resepService.updateResepPhoto(
-      req.params.resepId,
-      req.file
-    );
+    const updatedResep = await resepService.updateResepPhoto(req.params.resepId, req.file);
 
     responseApiSuccess(res, "Foto resep berhasil diupdate", updatedResep);
   } catch (err) {
@@ -55,7 +52,11 @@ const getReseps = async (req, res) => {
 
 const getResep = async (req, res) => {
   try {
-    const result = await resepService.getResepById(req.params.resepId);
+    const resepId = Number(req.params.resepId); // Convert string to number
+    if (isNaN(resepId)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Invalid recipe ID");
+    }
+    const result = await resepService.getResepById(resepId);
     responseApiSuccess(res, "Success get resep", result);
   } catch (err) {
     responseApiFailed(res, "Failed get resep");
@@ -64,7 +65,9 @@ const getResep = async (req, res) => {
 
 const updateResep = async (req, res) => {
   try {
-    const result = await resepService.updateResepById(req.params.resepId, req.body);
+    const resepId = Number(req.params.resepId);
+    console.log(req.body);
+    const result = await resepService.updateResepById(resepId, req.body);
     responseApiSuccess(res, "Success update resep", result);
   } catch (err) {
     console.log(err);

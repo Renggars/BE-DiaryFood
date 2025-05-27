@@ -8,6 +8,7 @@ import langkahValidation from "./langkah.validation.js";
 import kategoriValidation from "./kategori.validation.js";
 import threadValidation from "./thread.validation.js";
 import messageValidation from "./message.validation.js";
+import feedbackValidation from "./feedback.validation.js";
 
 export default {
   authValidation,
@@ -20,4 +21,5 @@ export default {
   kategoriValidation,
   threadValidation,
   messageValidation,
+  feedbackValidation,
 };
