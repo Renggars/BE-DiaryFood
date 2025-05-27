@@ -591,6 +591,62 @@ paths:
                     items:
                       type: object
 
+  /{resepId}/save:
+    post:
+      tags:
+        - Resep
+      summary: Simpan resep oleh user
+      description: Menyimpan resep ke daftar simpanan user yang sedang login.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resepId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID resep yang ingin disimpan
+      responses:
+        200:
+          description: Resep berhasil disimpan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        400:
+          description: Resep sudah disimpan sebelumnya
+        401:
+          description: Tidak terautentikasi
+        404:
+          description: Resep tidak ditemukan
+
+  /{resepId}/unsave:
+    delete:
+      tags:
+        - Resep
+      summary: Hapus resep dari daftar simpanan user
+      description: Menghapus resep dari daftar simpanan user yang sedang login.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: resepId
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID resep yang ingin dihapus dari simpanan
+      responses:
+        200:
+          description: Resep berhasil dihapus dari simpanan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        401:
+          description: Tidak terautentikasi
+        404:
+          description: Simpanan tidak ditemukan
+
   /resep/upload-photo:
     post:
       tags:

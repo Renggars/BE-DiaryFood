@@ -13,6 +13,22 @@ router
   .get(resepController.getReseps);
 
 router.post(
+  "/:resepId/save",
+  auth(),
+  validate(resepValidation.saveResep),
+  resepController.saveResep
+);
+
+router.delete(
+  "/:resepId/unsave",
+  auth(),
+  validate(resepValidation.unsaveResep),
+  resepController.unsaveResep
+);
+
+router.get("/saved", auth(), resepController.getAllSavedReseps);
+
+router.post(
   "/upload-photo",
   auth(),
   upload.single("photo"),

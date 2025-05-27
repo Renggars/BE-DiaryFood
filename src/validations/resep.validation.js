@@ -20,6 +20,18 @@ const updateResepPhoto = {
   file: uploadPhoto,
 };
 
+const saveResep = {
+  params: Joi.object({
+    resepId: Joi.number().integer().positive().required(),
+  }),
+};
+
+const unsaveResep = {
+  params: Joi.object({
+    resepId: Joi.number().integer().positive().required(),
+  }),
+};
+
 const bahanSchema = Joi.object({
   nama: Joi.string().required(),
   jumlah: Joi.string().required(),
@@ -86,6 +98,8 @@ const querySchema = Joi.object({
 export default {
   uploadPhoto,
   updateResepPhoto,
+  saveResep,
+  unsaveResep,
   createResep,
   getResep,
   updateResep,

@@ -29,6 +29,52 @@ const updateResepPhoto = async (resepId, file) => {
   return updated;
 };
 
+const saveResep = async (userId, resepId) => {
+  const existing = await prisma.savedResep.findUnique({
+    where: {
+      userId_resepId: {
+        userId,
+        resepId,
+      },
+    },
+  });
+
+  if (existing) {
+    throw new Error("Resep sudah disimpan sebelumnya.");
+  }
+
+  const saved = await prisma.savedResep.create({
+    data: {
+      userId,
+      resepId,
+    },
+  });
+
+  return saved;
+};
+
+const unsaveResep = async (userId, resepId) => {
+  const deleted = await prisma.savedResep.delete({
+    where: {
+      userId_resepId: {
+        userId,
+        resepId,
+      },
+    },
+  });
+
+  return deleted;
+};
+
+const getAllSavedReseps = async (userId) => {
+  return prisma.savedResep.findMany({
+    where: { userId },
+    include: {
+      resep: true,
+    },
+  });
+};
+
 const createResep = async (data) => {
   return prisma.$transaction(async (tx) => {
     const resep = await tx.resep.create({
@@ -215,6 +261,9 @@ const deleteResepById = async (id) => {
 export default {
   uploadPhoto,
   updateResepPhoto,
+  saveResep,
+  unsaveResep,
+  getAllSavedReseps,
   createResep,
   queryReseps,
   getResepById,

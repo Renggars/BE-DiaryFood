@@ -18,10 +18,14 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  resepDisetujui Resep[]    @relation("ResepDisetujuiAdmin")
-  resepDiunggah  Resep[]    @relation("UserUploadResep")
-  Thread         Thread[]
-  feedback       Feedback[] @relation("UserFeedback")
+  resepDisetujui Resep[] @relation("ResepDisetujuiAdmin")
+  resepDiunggah  Resep[] @relation("UserUploadResep")
+
+  Thread Thread[]
+
+  feedback Feedback[] @relation("UserFeedback")
+
+  savedResep SavedResep[]
 }
 
 model Resep {
@@ -39,12 +43,25 @@ model Resep {
   admin           User?              @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
   kategori        Kategori           @relation(fields: [kategoriId], references: [id])
   user            User               @relation("UserUploadResep", fields: [userId], references: [id], onDelete: Cascade)
+  disimpanOleh    SavedResep[]
 }
 
 enum StatusResep {
   PENDING
   APPROVED
   REJECTED
+}
+
+model SavedResep {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  resepId Int
+  savedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resep Resep @relation(fields: [resepId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, resepId])
 }
 
 model Kategori {

@@ -28,6 +28,44 @@ const updateResepPhoto = async (req, res) => {
   }
 };
 
+const saveResep = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const resepId = req.params.resepId;
+
+    const result = await resepService.saveResep(userId, resepId);
+    responseApiSuccess(res, "Resep berhasil disimpan", result);
+  } catch (err) {
+    console.log(err);
+    responseApiFailed(res, "Gagal menyimpan resep");
+  }
+};
+
+const unsaveResep = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const resepId = req.params.resepId;
+
+    const result = await resepService.unsaveResep(userId, resepId);
+    responseApiSuccess(res, "Resep berhasil dihapus dari simpanan", result);
+  } catch (err) {
+    console.log(err);
+    responseApiFailed(res, "Gagal menghapus resep dari simpanan");
+  }
+};
+
+const getAllSavedReseps = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const saved = await resepService.getAllSavedReseps(userId);
+
+    responseApiSuccess(res, "Berhasil mengambil resep yang disimpan", saved);
+  } catch (err) {
+    responseApiFailed(res, "Gagal mengambil resep yang disimpan");
+  }
+};
+
 const createResep = async (req, res) => {
   try {
     const result = await resepService.createResep(req.body);
@@ -87,6 +125,9 @@ const deleteResep = async (req, res) => {
 export default {
   uploadPhoto,
   updateResepPhoto,
+  saveResep,
+  unsaveResep,
+  getAllSavedReseps,
   getReseps,
   getResep,
   createResep,
