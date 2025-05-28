@@ -3,9 +3,9 @@ import commentService from "../services/comment.service.js";
 
 const createComment = async (req, res) => {
   try {
-    const resepId = parseInt(req.params.resepId); // From URL
-    const { comment } = req.body; // Comment from body
-    const userId = req.user?.id; // From auth middleware
+    const resepId = parseInt(req.params.resepId); 
+    const { comment } = req.body; 
+    const userId = req.user?.id; 
     if (!userId) {
       throw new Error("User not authenticated");
     }

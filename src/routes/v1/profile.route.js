@@ -5,10 +5,12 @@ import { auth, authAcces } from "../../middlewares/auth.js";
 import resepController from "../../controllers/resep.controller.js";
 import resepValidation from "../../validations/resep.validation.js";
 import validate from "../../middlewares/validate.js";
+import userValidation from "../../validations/user.validation.js";
+import userController from "../../controllers/user.controller.js";
 
 const router = express.Router();
 
-router.route("/").get(auth(), profileController.index);
+router.route("/").put(auth(), validate(userValidation.updateUser), userController.updateUser).get(auth(), profileController.index);
 
 // user recipe
 router.route("/recipes").post(auth(), validate(resepValidation.createResep), resepController.createResep).get(auth(), profileController.getRecipes);

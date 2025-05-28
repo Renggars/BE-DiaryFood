@@ -104,12 +104,10 @@ const createResep = async (data) => {
       data: {
         nama: data.nama,
         photoResep: data.photoResep,
-        prevTime: data.prevTime,
+        preparationTime: data.preparationTime,
         cookingTime: data.cookingTime,
         servingTime: data.servingTime,
         description: data.description,
-        note: data.note,
-        rating: data.rating,
         kategoriId: data.kategoriId,
         userId: data.userId,
       },
@@ -200,6 +198,9 @@ const getResepById = async (id) => {
           photo: true,
         },
       },
+      preparationTime: true,
+      cookingTime: true,
+      servingTime: true,
       bahanList: true,
       langkahList: {
         orderBy: {

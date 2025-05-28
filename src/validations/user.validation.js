@@ -58,6 +58,7 @@ const updateUser = {
       email: Joi.string().email().optional(),
       role: Joi.string().valid("user", "admin").optional(),
       photo: Joi.string().optional(),
+      phoneNumber: Joi.string().trim().allow("", null).optional(),
     })
     .min(1),
 };

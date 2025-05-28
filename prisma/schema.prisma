@@ -40,11 +40,11 @@ model Resep {
   tanggalAcc      DateTime?
   disetujuiOleh   Int?
   description     String
-  prevTime        String
+  preparationTime String
   cookingTime     String
   servingTime     String
   note            String?
-  rating          Int
+  rating          Int?
   bahanList       Bahan[]
   langkahList     LangkahPembuatan[]
 

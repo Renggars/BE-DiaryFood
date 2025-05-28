@@ -44,7 +44,7 @@ const createResep = {
   body: Joi.object({
     nama: Joi.string().required(),
     photoResep: Joi.string().optional(),
-    prevTime: Joi.string().required(),
+    preparationTime: Joi.string().required(),
     cookingTime: Joi.string().required(),
     servingTime: Joi.string().required(),
     description: Joi.string().required(),
@@ -64,7 +64,7 @@ const updateResep = {
   body: Joi.object({
     nama: Joi.string().optional(),
     photoResep: Joi.string().optional(),
-    prevTime: Joi.string().required(),
+    preparationTime: Joi.string().required(),
     cookingTime: Joi.string().required(),
     servingTime: Joi.string().required(),
     description: Joi.string().required(),
