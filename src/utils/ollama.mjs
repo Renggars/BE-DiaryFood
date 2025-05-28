@@ -2,7 +2,7 @@ import ollama from "ollama";
 
 export async function getAIResponse(messages) {
   const stream = await ollama.chat({
-    model: "deepseek-r1:1.5b",
+    model: "gemma3:1b",
     messages,
     stream: true,
   });

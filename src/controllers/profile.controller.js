@@ -28,12 +28,5 @@ const getRecipes = async (req, res) => {
     return responseApiFailed(res, error.message || "Failed to retrieve recipes data");
   }
 };
-// const getRecipeById = async (req, res) => {
-//   try {
-//     const recipes = await profileService.getRecipeById(req.params.resepIdrId);
-//     return responseApiSuccess(res, "Successfully retrieved recipe data", recipes);
-//   } catch (error) {
-//     return responseApiFailed(res, error.message || "Failed to retrieve recipes data");
-//   }
-// };
+
 export default { index, getRecipes };

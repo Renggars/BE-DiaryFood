@@ -189,28 +189,44 @@ const queryReseps = async (filter, options) => {
 };
 
 const getResepById = async (id) => {
-  const resep = await prisma.resep.findUnique({
-    where: { id },
-    include: {
-      user: {
-        select: {
-          name: true,
-          photo: true,
+  try {
+    const totalSaved = await prisma.savedResep.count({
+      where: { resepId: id },
+    });
+
+    const resep = await prisma.resep.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            name: true,
+            photo: true,
+          },
+        },
+        comment: true,
+        bahanList: true,
+        langkahList: {
+          orderBy: {
+            urutan: "asc",
+          },
         },
       },
-      preparationTime: true,
-      cookingTime: true,
-      servingTime: true,
-      bahanList: true,
-      langkahList: {
-        orderBy: {
-          urutan: "asc",
-        },
-      },
-    },
-  });
-  if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
-  return resep;
+    });
+
+    if (!resep) {
+      throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+    }
+
+    return {
+      ...resep,
+      totalSaved,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to retrieve resep data");
+  }
 };
 
 const updateResepById = async (id, updateBody, file) => {
