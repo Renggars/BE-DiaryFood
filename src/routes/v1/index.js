@@ -59,11 +59,11 @@ const defaultRoutes = [
     route: adminResepRoute,
   },
   {
-    path: "/thread",
+    path: "/threads",
     route: threadRoute,
   },
   {
-    path: "/message",
+    path: "/messages",
     route: messageRoute,
   },
 ];
