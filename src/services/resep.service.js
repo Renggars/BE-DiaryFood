@@ -188,7 +188,9 @@ const queryReseps = async (filter, options) => {
   };
 };
 
-const getResepById = async (id) => {
+// Di resepService.js
+const getResepById = async (id, currentUserId = null) => {
+  // Ambil data resep tanpa disimpanOleh
   const resep = await prisma.resep.findUnique({
     where: { id },
     include: {
@@ -198,9 +200,6 @@ const getResepById = async (id) => {
           photo: true,
         },
       },
-      preparationTime: true,
-      cookingTime: true,
-      servingTime: true,
       bahanList: true,
       langkahList: {
         orderBy: {
@@ -210,7 +209,29 @@ const getResepById = async (id) => {
     },
   });
   if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
-  return resep;
+
+  // Hitung jumlah saves langsung menggunakan count
+  const savesCount = await prisma.savedResep.count({
+    where: { resepId: id },
+  });
+
+  // Cek apakah resep disimpan oleh pengguna saat ini
+  let isSavedByCurrentUser = false;
+  if (currentUserId) {
+    const savedByUser = await prisma.savedResep.findFirst({
+      where: {
+        resepId: id,
+        userId: currentUserId,
+      },
+    });
+    isSavedByCurrentUser = !!savedByUser;
+  }
+
+  return {
+    ...resep,
+    savesCount,
+    isSavedByCurrentUser,
+  };
 };
 
 const updateResepById = async (id, updateBody, file) => {
@@ -234,7 +255,9 @@ const updateResepById = async (id, updateBody, file) => {
   }
 
   if (updateBody.langkahPembuatan) {
-    operations.push(prisma.langkahPembuatan.deleteMany({ where: { resepId: id } }));
+    operations.push(
+      prisma.langkahPembuatan.deleteMany({ where: { resepId: id } })
+    );
     operations.push(
       prisma.langkahPembuatan.createMany({
         data: updateBody.langkahPembuatan.map((langkah) => ({
@@ -273,7 +296,8 @@ const updateResepById = async (id, updateBody, file) => {
 
 const deleteResepById = async (id) => {
   const existingResep = await prisma.resep.findUnique({ where: { id } });
-  if (!existingResep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  if (!existingResep)
+    throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
   return prisma.resep.delete({
     where: { id },

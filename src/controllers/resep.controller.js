@@ -1,5 +1,9 @@
 import resepService from "../services/resep.service.js";
-import { responseApiSuccess, responseApiFailed, responseApiCreateSuccess } from "../utils/responseApi.js";
+import {
+  responseApiSuccess,
+  responseApiFailed,
+  responseApiCreateSuccess,
+} from "../utils/responseApi.js";
 
 const uploadPhoto = async (req, res) => {
   try {
@@ -20,7 +24,10 @@ const updateResepPhoto = async (req, res) => {
       return res.status(400).json({ message: "File foto tidak ditemukan" });
     }
 
-    const updatedResep = await resepService.updateResepPhoto(req.params.resepId, req.file);
+    const updatedResep = await resepService.updateResepPhoto(
+      req.params.resepId,
+      req.file
+    );
 
     responseApiSuccess(res, "Foto resep berhasil diupdate", updatedResep);
   } catch (err) {
@@ -90,11 +97,12 @@ const getReseps = async (req, res) => {
 
 const getResep = async (req, res) => {
   try {
-    const resepId = Number(req.params.resepId); // Convert string to number
+    const resepId = Number(req.params.resepId);
     if (isNaN(resepId)) {
       throw new ApiError(httpStatus.BAD_REQUEST, "Invalid recipe ID");
     }
-    const result = await resepService.getResepById(resepId);
+    const currentUserId = req.user?.id || null;
+    const result = await resepService.getResepById(resepId, currentUserId);
     responseApiSuccess(res, "Success get resep", result);
   } catch (err) {
     responseApiFailed(res, "Failed get resep");
