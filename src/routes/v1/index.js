@@ -11,6 +11,7 @@ import messageRoute from "./message.route.js";
 import adminRoute from "./adminRoute.route.js";
 import profile from "./profile.route.js";
 import feedbackRoute from "./feedback.route.js";
+import commentRoute from "./comment.route.js";
 import path from "path";
 
 const router = express.Router();
@@ -40,6 +41,7 @@ const defaultRoutes = [
     path: "/langkah",
     route: langkahRoute,
   },
+
   {
     path: "/admin/dashboard",
     route: adminRoute,

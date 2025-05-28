@@ -9,20 +9,21 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(user)
-  photo     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String   @unique
+  password    String
+  phoneNumber String?
+  role        Role     @default(user)
+  photo       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   resepDisetujui Resep[] @relation("ResepDisetujuiAdmin")
   resepDiunggah  Resep[] @relation("UserUploadResep")
 
-  Thread Thread[]
-
+  Thread   Thread[]
+  comment  Comment[]  @relation("UserComment")
   feedback Feedback[] @relation("UserFeedback")
 
   savedResep SavedResep[]
@@ -38,12 +39,21 @@ model Resep {
   isApproved      StatusResep        @default(PENDING)
   tanggalAcc      DateTime?
   disetujuiOleh   Int?
+  description     String
+  prevTime        String
+  cookingTime     String
+  servingTime     String
+  note            String?
+  rating          Int
   bahanList       Bahan[]
   langkahList     LangkahPembuatan[]
-  admin           User?              @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
-  kategori        Kategori           @relation(fields: [kategoriId], references: [id])
-  user            User               @relation("UserUploadResep", fields: [userId], references: [id], onDelete: Cascade)
-  disimpanOleh    SavedResep[]
+
+  comment Comment[] @relation("RecipeComment")
+
+  admin        User?        @relation("ResepDisetujuiAdmin", fields: [disetujuiOleh], references: [id])
+  kategori     Kategori     @relation(fields: [kategoriId], references: [id])
+  user         User         @relation("UserUploadResep", fields: [userId], references: [id], onDelete: Cascade)
+  disimpanOleh SavedResep[]
 }
 
 enum StatusResep {
@@ -126,4 +136,15 @@ model Feedback {
   subject         String
   message         String
   user            User     @relation("UserFeedback", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  resepId   Int
+  userId    Int
+  comment   String
+  createdAt DateTime @default(now()) // Added for tracking creation time
+
+  resep Resep @relation("RecipeComment", fields: [resepId], references: [id], onDelete: Cascade)
+  user  User  @relation("UserComment", fields: [userId], references: [id], onDelete: Cascade)
 }

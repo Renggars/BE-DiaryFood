@@ -104,6 +104,12 @@ const createResep = async (data) => {
       data: {
         nama: data.nama,
         photoResep: data.photoResep,
+        prevTime: data.prevTime,
+        cookingTime: data.cookingTime,
+        servingTime: data.servingTime,
+        description: data.description,
+        note: data.note,
+        rating: data.rating,
         kategoriId: data.kategoriId,
         userId: data.userId,
       },
@@ -227,9 +233,7 @@ const updateResepById = async (id, updateBody, file) => {
   }
 
   if (updateBody.langkahPembuatan) {
-    operations.push(
-      prisma.langkahPembuatan.deleteMany({ where: { resepId: id } })
-    );
+    operations.push(prisma.langkahPembuatan.deleteMany({ where: { resepId: id } }));
     operations.push(
       prisma.langkahPembuatan.createMany({
         data: updateBody.langkahPembuatan.map((langkah) => ({
@@ -268,8 +272,7 @@ const updateResepById = async (id, updateBody, file) => {
 
 const deleteResepById = async (id) => {
   const existingResep = await prisma.resep.findUnique({ where: { id } });
-  if (!existingResep)
-    throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  if (!existingResep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
   return prisma.resep.delete({
     where: { id },

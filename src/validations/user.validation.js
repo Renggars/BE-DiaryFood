@@ -2,11 +2,9 @@ import Joi from "joi";
 import { password } from "./custom.validation.js";
 
 const uploadPhoto = Joi.object({
-  mimetype: Joi.string()
-    .valid("image/jpeg", "image/png", "image/webp")
-    .messages({
-      "any.only": "File harus berupa gambar (jpeg, png, webp)",
-    }),
+  mimetype: Joi.string().valid("image/jpeg", "image/png", "image/webp").messages({
+    "any.only": "File harus berupa gambar (jpeg, png, webp)",
+  }),
   size: Joi.number()
     .max(5 * 1024 * 1024) // 5MB
     .messages({
@@ -29,6 +27,7 @@ const createUser = {
     password: Joi.string().custom(password).required(),
     role: Joi.string().valid("user", "admin").default("user"),
     photo: Joi.string().optional(),
+    phoneNumber: Joi.string().optional(),
   }),
 };
 
