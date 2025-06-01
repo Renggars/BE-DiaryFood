@@ -3,16 +3,18 @@ import commentService from "../services/comment.service.js";
 
 const createComment = async (req, res) => {
   try {
-    const resepId = parseInt(req.params.resepId); 
-    const { comment } = req.body; 
-    const userId = req.user?.id; 
+    const resepId = parseInt(req.params.resepId);
+    const { comment, rating } = req.body;
+    const userId = req.user?.id;
     if (!userId) {
       throw new Error("User not authenticated");
     }
     console.log("userId:", userId);
     console.log("resepId:", resepId);
     console.log("comment:", comment);
-    const result = await commentService.createCommentData(userId, resepId, { comment }); // Call createUlasan
+    console.log("comment:", rating);
+
+    const result = await commentService.createCommentData(userId, resepId, { comment, rating }); // Call createUlasan
     return responseApiCreateSuccess(res, "Review created successfully", result, 201);
   } catch (error) {
     console.error("Create comment error:", error);

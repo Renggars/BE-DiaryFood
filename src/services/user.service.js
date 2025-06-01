@@ -150,6 +150,20 @@ const deleteUserById = async (userId) => {
   return deleteUser;
 };
 
+const getCurrentUserData = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      photo: true,
+    },
+  });
+
+  return user;
+};
+
 export default {
   uploadPhoto,
   updateUserPhoto,
@@ -159,4 +173,5 @@ export default {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getCurrentUserData,
 };

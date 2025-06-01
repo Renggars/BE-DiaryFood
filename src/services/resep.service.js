@@ -200,6 +200,25 @@ const getResepById = async (id, currentUserId = null) => {
           photo: true,
         },
       },
+      comment: {
+        select: {
+          id: true,
+          comment: true,
+          createdAt: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              photo: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
+        skip: 0,
+      },
       bahanList: true,
       langkahList: {
         orderBy: {
@@ -212,6 +231,10 @@ const getResepById = async (id, currentUserId = null) => {
 
   // Hitung jumlah saves langsung menggunakan count
   const savesCount = await prisma.savedResep.count({
+    where: { resepId: id },
+  });
+
+  const totalComments = await prisma.comment.count({
     where: { resepId: id },
   });
 
@@ -229,6 +252,7 @@ const getResepById = async (id, currentUserId = null) => {
 
   return {
     ...resep,
+    totalComments,
     savesCount,
     isSavedByCurrentUser,
   };
@@ -255,9 +279,7 @@ const updateResepById = async (id, updateBody, file) => {
   }
 
   if (updateBody.langkahPembuatan) {
-    operations.push(
-      prisma.langkahPembuatan.deleteMany({ where: { resepId: id } })
-    );
+    operations.push(prisma.langkahPembuatan.deleteMany({ where: { resepId: id } }));
     operations.push(
       prisma.langkahPembuatan.createMany({
         data: updateBody.langkahPembuatan.map((langkah) => ({
@@ -296,8 +318,7 @@ const updateResepById = async (id, updateBody, file) => {
 
 const deleteResepById = async (id) => {
   const existingResep = await prisma.resep.findUnique({ where: { id } });
-  if (!existingResep)
-    throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  if (!existingResep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
 
   return prisma.resep.delete({
     where: { id },

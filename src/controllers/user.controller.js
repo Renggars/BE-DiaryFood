@@ -1,11 +1,7 @@
 import userService from "../services/user.service.js";
 import ApiError from "../utils/ApiError.js";
 import httpStatus from "http-status";
-import {
-  responseApiSuccess,
-  responseApiFailed,
-  responseApiCreateSuccess,
-} from "../utils/responseApi.js";
+import { responseApiSuccess, responseApiFailed, responseApiCreateSuccess } from "../utils/responseApi.js";
 
 const uploadPhoto = async (req, res) => {
   try {
@@ -27,10 +23,7 @@ const updateUserPhoto = async (req, res) => {
       return res.status(400).json({ message: "File tidak ditemukan" });
     }
 
-    const result = await userService.updateUserPhoto(
-      req.params.userId,
-      req.file
-    );
+    const result = await userService.updateUserPhoto(req.params.userId, req.file);
     responseApiSuccess(res, "Berhasil memperbarui foto user", result);
   } catch (err) {
     console.log(err);
@@ -82,10 +75,7 @@ const getUserByEmail = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const result = await userService.updateUserById(
-      req.params.userId,
-      req.body
-    );
+    const result = await userService.updateUserById(req.params.userId, req.body);
 
     if (!result) {
       throw new ApiError(httpStatus.NOT_FOUND, "User not found");
@@ -107,6 +97,20 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const getCurrentUser = async (req, res) => {
+  try {
+    const userId = parseInt(req.user.id);
+    if (!userId) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "User ID not found in token");
+    }
+    const result = await userService.getCurrentUserData(userId);
+    responseApiSuccess(res, "Success get user ", result);
+  } catch (err) {
+    console.log(err);
+    responseApiFailed(res, `Failed get user ${err}`);
+  }
+};
+
 export default {
   updateUserPhoto,
   uploadPhoto,
@@ -116,4 +120,5 @@ export default {
   createUser,
   updateUser,
   deleteUser,
+  getCurrentUser,
 };

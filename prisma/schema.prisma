@@ -143,6 +143,7 @@ model Comment {
   resepId   Int
   userId    Int
   comment   String
+  rating    Int      @default(0)
   createdAt DateTime @default(now()) // Added for tracking creation time
 
   resep Resep @relation("RecipeComment", fields: [resepId], references: [id], onDelete: Cascade)

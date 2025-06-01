@@ -20,6 +20,7 @@ const createCommentData = async (userId, resepId, data) => {
       userId,
       resepId,
       comment: data.comment,
+      rating: data.rating,
     },
   });
 };
