@@ -188,7 +188,6 @@ const queryReseps = async (filter, options) => {
   };
 };
 
-// Di resepService.js
 const getResepById = async (id, currentUserId = null) => {
   // Ambil data resep tanpa disimpanOleh
   const resep = await prisma.resep.findUnique({
@@ -200,25 +199,6 @@ const getResepById = async (id, currentUserId = null) => {
           photo: true,
         },
       },
-      comment: {
-        select: {
-          id: true,
-          comment: true,
-          createdAt: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              photo: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 5,
-        skip: 0,
-      },
       bahanList: true,
       langkahList: {
         orderBy: {
@@ -227,16 +207,36 @@ const getResepById = async (id, currentUserId = null) => {
       },
     },
   });
-  if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep not found");
+  if (!resep) throw new ApiError(httpStatus.NOT_FOUND, "Resep tidak ditemukan");
 
   // Hitung jumlah saves langsung menggunakan count
   const savesCount = await prisma.savedResep.count({
     where: { resepId: id },
   });
 
+  // Hitung total komentar
   const totalComments = await prisma.comment.count({
     where: { resepId: id },
   });
+
+  // Hitung total ulasan (komentar dengan rating > 0) dan rata-rata rating
+  const reviewStats = await prisma.comment.aggregate({
+    where: {
+      resepId: id,
+      rating: {
+        gt: 0, // Hanya komentar dengan rating lebih dari 0
+      },
+    },
+    _count: {
+      id: true, // Total ulasan
+    },
+    _avg: {
+      rating: true, // Rata-rata rating
+    },
+  });
+
+  const totalReviews = reviewStats._count.id;
+  const averageRating = reviewStats._avg.rating ? parseFloat(reviewStats._avg.rating.toFixed(1)) : 0.0;
 
   // Cek apakah resep disimpan oleh pengguna saat ini
   let isSavedByCurrentUser = false;
@@ -253,6 +253,8 @@ const getResepById = async (id, currentUserId = null) => {
   return {
     ...resep,
     totalComments,
+    totalReviews,
+    averageRating,
     savesCount,
     isSavedByCurrentUser,
   };

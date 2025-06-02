@@ -75,9 +75,15 @@ model SavedResep {
 }
 
 model Kategori {
-  id    Int     @id @default(autoincrement())
-  nama  String
-  resep Resep[]
+  id          Int        @id @default(autoincrement())
+  nama        String
+  parentId    Int?       @map("parent_id")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime?  @updatedAt
+
+  parent      Kategori?  @relation("CategoryToSubcategory", fields: [parentId], references: [id], onDelete: SetNull)
+  subcategories Kategori[] @relation("CategoryToSubcategory")
+  resep       Resep[]
 }
 
 model Bahan {
@@ -144,7 +150,7 @@ model Comment {
   userId    Int
   comment   String
   rating    Int      @default(0)
-  createdAt DateTime @default(now()) // Added for tracking creation time
+  createdAt DateTime @default(now())
 
   resep Resep @relation("RecipeComment", fields: [resepId], references: [id], onDelete: Cascade)
   user  User  @relation("UserComment", fields: [userId], references: [id], onDelete: Cascade)

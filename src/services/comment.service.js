@@ -53,7 +53,7 @@ const getCommentsData = async (resepId) => {
         },
       },
       orderBy: {
-        createdAt: "asc", // Sort by creation date
+        createdAt: "desc", // Sort by creation date
       },
     });
   } catch (error) {
