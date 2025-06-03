@@ -8,8 +8,8 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const config = {
-  env: process.env.NODE_ENV,
-  port: process.env.PORT,
+  env: process.env.NODE_ENV || "production",
+  port: process.env.PORT || 4000,
   database: {
     url: process.env.DATABASE_URL,
   },

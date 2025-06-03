@@ -16,21 +16,29 @@ import setupSwagger from "./docs/swaggerConfig.js";
 let app;
 
 try {
+  console.log("Starting app.js initialization...");
   app = express();
 
+  // Logging middleware untuk debugging
   if (config.env !== "test") {
+    console.log("Applying morgan middleware...");
     app.use(morgan.successHandler);
     app.use(morgan.errorHandler);
   }
 
+  // Keamanan dan optimasi
+  console.log("Applying security and optimization middleware...");
   app.use(helmet());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: "10mb" })); // Tambahkan limit untuk mencegah payload besar
+  app.use(express.urlencoded({ extended: true, limit: "10mb" }));
   app.use(xss());
   app.use(compression());
+
+  // Konfigurasi CORS
+  console.log("Applying CORS with CLIENT_URL:", config.clientUrl);
   app.use(
     cors({
-      origin: process.env.CLIENT_URL || "http://localhost:3000",
+      origin: config.clientUrl,
       methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
@@ -38,33 +46,55 @@ try {
   );
   app.options("*", cors());
 
+  // Middleware untuk menangani multipart/form-data
   app.use((req, res, next) => {
-    const contentType = req.headers["content-type"] || "";
-    if (!contentType.startsWith("multipart/form-data")) {
-      express.json()(req, res, (err) => {
-        if (err) return next(err);
-        express.urlencoded({ extended: true })(req, res, next);
-      });
-    } else {
-      next();
+    try {
+      const contentType = req.headers["content-type"] || "";
+      console.log("Processing request with Content-Type:", contentType);
+      if (!contentType.startsWith("multipart/form-data")) {
+        express.json({ limit: "10mb" })(req, res, (err) => {
+          if (err) {
+            console.error("express.json error:", err.message);
+            return next(err);
+          }
+          express.urlencoded({ extended: true, limit: "10mb" })(req, res, next);
+        });
+      } else {
+        next();
+      }
+    } catch (error) {
+      console.error("Middleware error:", error.message);
+      next(error);
     }
   });
 
+  // Route dasar untuk testing
   app.get("/", (req, res) => {
+    console.log("Handling GET / request");
     res.send("hello world");
   });
 
+  // Inisialisasi Passport
+  console.log("Initializing Passport...");
   app.use(passport.initialize());
   passport.use("jwt", jwtStrategy);
   passport.use("google", googleStrategy);
 
+  // Setup Swagger
+  console.log("Setting up Swagger...");
   setupSwagger(app);
+
+  // Rute API
+  console.log("Applying API routes...");
   app.use("/v1", routes);
 
+  // Handle 404
   app.use((req, res, next) => {
+    console.log("404: Route not found:", req.originalUrl);
     next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
   });
 
+  // Error handling
   app.use(errorConverter);
   app.use(errorHandler);
 

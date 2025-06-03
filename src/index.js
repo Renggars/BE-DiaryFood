@@ -5,18 +5,31 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-try {
-  await prisma.$connect();
-  logger.info("Connected to Database");
-} catch (error) {
-  logger.error("Failed to connect to Database:", error.message);
-  app.use((req, res, next) => {
-    res.status(500).json({
-      success: false,
-      message: "Database connection failed",
-      error: error.message,
+async function startServer() {
+  try {
+    console.log(
+      "Attempting to connect to database with URL:",
+      config.database.url
+    );
+    await prisma.$connect();
+    logger.info("Connected to Database");
+  } catch (error) {
+    logger.error("Failed to connect to Database:", error.message);
+    app.use((req, res, next) => {
+      res.status(500).json({
+        success: false,
+        message: "Database connection failed",
+        error: error.message,
+      });
     });
-  });
+  }
+
+  // Tidak perlu app.listen di Vercel karena serverless function menangani port
+  logger.info("Server initialized, running in serverless mode");
 }
+
+startServer().catch((error) => {
+  logger.error("Failed to start server:", error.message);
+});
 
 export default app;
