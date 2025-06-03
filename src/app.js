@@ -10,11 +10,7 @@ import xss from "xss-clean";
 import compression from "compression";
 import cors from "cors";
 import passport from "passport";
-import {
-  jwtStrategy,
-  googleStrategy,
-  // facebookStrategy,
-} from "./config/passport.js";
+import { jwtStrategy, googleStrategy } from "./config/passport.js";
 import setupSwagger from "./docs/swaggerConfig.js";
 
 let app;
@@ -27,22 +23,11 @@ try {
     app.use(morgan.errorHandler);
   }
 
-  // set security HTTP headers
   app.use(helmet());
-
-  // aktifin parsing json
   app.use(express.json());
-
-  // aktifin urlencoded
   app.use(express.urlencoded({ extended: true }));
-
-  // sanitize request data
   app.use(xss());
-
-  // gzip compression
   app.use(compression());
-
-  // enable cors
   app.use(
     cors({
       origin: process.env.CLIENT_URL || "http://localhost:3000",
@@ -52,18 +37,6 @@ try {
     })
   );
   app.options("*", cors());
-
-  app.use((req, res, next) => {
-    const error = new ApiError(httpStatus.NOT_FOUND, "Route not found");
-    if (!res.headersSent) {
-      return res.status(error.statusCode).json({
-        success: false,
-        message: error.message,
-        data: null,
-      });
-    }
-    next(error);
-  });
 
   app.use((req, res, next) => {
     const contentType = req.headers["content-type"] || "";
@@ -81,30 +54,20 @@ try {
     res.send("hello world");
   });
 
-  // jwt authentication
   app.use(passport.initialize());
   passport.use("jwt", jwtStrategy);
   passport.use("google", googleStrategy);
-  // passport.use("facebook", facebookStrategy);
 
-  // Swagger route
   setupSwagger(app);
-
-  // v1 api routes
   app.use("/v1", routes);
 
-  // send 404 error jika route tidak ada
   app.use((req, res, next) => {
     next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
   });
 
-  // convert error jadi Instance API Error jika ada error yang tidak ketangkap
   app.use(errorConverter);
-
-  // handle error
   app.use(errorHandler);
 
-  // Log jika inisialisasi berhasil
   console.log("App initialization completed successfully");
 } catch (error) {
   console.error("Error initializing app.js:", error.message);
