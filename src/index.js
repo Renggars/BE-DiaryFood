@@ -24,7 +24,6 @@ async function startServer() {
     });
   }
 
-  // Tidak perlu app.listen di Vercel karena serverless function menangani port
   logger.info("Server initialized, running in serverless mode");
 }
 

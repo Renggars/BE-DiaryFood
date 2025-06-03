@@ -6,7 +6,7 @@ import morgan from "./config/morgan.js";
 import { errorConverter, errorHandler } from "./middlewares/error.js";
 import ApiError from "./utils/ApiError.js";
 import helmet from "helmet";
-import xss from "xss-clean";
+import { body, validationResult } from "express-validator";
 import compression from "compression";
 import cors from "cors";
 import passport from "passport";
@@ -29,9 +29,21 @@ try {
   // Keamanan dan optimasi
   console.log("Applying security and optimization middleware...");
   app.use(helmet());
-  app.use(express.json({ limit: "10mb" })); // Tambahkan limit untuk mencegah payload besar
+  app.use(express.json({ limit: "10mb" }));
   app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-  app.use(xss());
+  app.use(
+    [
+      body("*").trim().escape(), // Sanitasi input menggunakan express-validator
+    ],
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        console.error("Validation errors:", errors.array());
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    }
+  );
   app.use(compression());
 
   // Konfigurasi CORS
