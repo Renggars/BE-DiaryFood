@@ -17,88 +17,101 @@ import {
 } from "./config/passport.js";
 import setupSwagger from "./docs/swaggerConfig.js";
 
-const app = express();
+let app;
 
-if (config.env !== "test") {
-  app.use(morgan.successHandler);
-  app.use(morgan.errorHandler);
+try {
+  app = express();
+
+  if (config.env !== "test") {
+    app.use(morgan.successHandler);
+    app.use(morgan.errorHandler);
+  }
+
+  // set security HTTP headers
+  app.use(helmet());
+
+  // aktifin parsing json
+  app.use(express.json());
+
+  // aktifin urlencoded
+  app.use(express.urlencoded({ extended: true }));
+
+  // sanitize request data
+  app.use(xss());
+
+  // gzip compression
+  app.use(compression());
+
+  // enable cors
+  app.use(
+    cors({
+      origin: process.env.CLIENT_URL || "http://localhost:3000",
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    })
+  );
+  app.options("*", cors());
+
+  app.use((req, res, next) => {
+    const error = new ApiError(httpStatus.NOT_FOUND, "Route not found");
+    if (!res.headersSent) {
+      return res.status(error.statusCode).json({
+        success: false,
+        message: error.message,
+        data: null,
+      });
+    }
+    next(error);
+  });
+
+  app.use((req, res, next) => {
+    const contentType = req.headers["content-type"] || "";
+    if (!contentType.startsWith("multipart/form-data")) {
+      express.json()(req, res, (err) => {
+        if (err) return next(err);
+        express.urlencoded({ extended: true })(req, res, next);
+      });
+    } else {
+      next();
+    }
+  });
+
+  app.get("/", (req, res) => {
+    res.send("hello world");
+  });
+
+  // jwt authentication
+  app.use(passport.initialize());
+  passport.use("jwt", jwtStrategy);
+  passport.use("google", googleStrategy);
+  // passport.use("facebook", facebookStrategy);
+
+  // Swagger route
+  setupSwagger(app);
+
+  // v1 api routes
+  app.use("/v1", routes);
+
+  // send 404 error jika route tidak ada
+  app.use((req, res, next) => {
+    next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
+  });
+
+  // convert error jadi Instance API Error jika ada error yang tidak ketangkap
+  app.use(errorConverter);
+
+  // handle error
+  app.use(errorHandler);
+
+  // Log jika inisialisasi berhasil
+  console.log("App initialization completed successfully");
+} catch (error) {
+  console.error("Error initializing app.js:", error.message);
+  throw new ApiError(
+    httpStatus.INTERNAL_SERVER_ERROR,
+    "Application initialization failed"
+  );
 }
-
-// set security HTTP headers
-app.use(helmet());
-
-// aktifin parsing json
-app.use(express.json());
-
-// aktifin urlencoded
-app.use(express.urlencoded({ extended: true }));
-
-// sanitize request data
-app.use(xss());
-
-// gzip compression
-app.use(compression());
-
-// enable cors
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
-app.options("*", cors());
-
-app.use((req, res, next) => {
-  const error = new ApiError(httpStatus.NOT_FOUND, "Route not found");
-  if (!res.headersSent) {
-    return res.status(error.statusCode).json({
-      success: false,
-      message: error.message,
-      data: null,
-    });
-  }
-  next(error);
-});
-
-app.use((req, res, next) => {
-  const contentType = req.headers["content-type"] || "";
-  if (!contentType.startsWith("multipart/form-data")) {
-    express.json()(req, res, (err) => {
-      if (err) return next(err);
-      express.urlencoded({ extended: true })(req, res, next);
-    });
-  } else {
-    next();
-  }
-});
-
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
-
-// jwt authentication
-app.use(passport.initialize());
-passport.use("jwt", jwtStrategy);
-passport.use("google", googleStrategy);
-// passport.use("facebook", facebookStrategy);
-
-// Swagger route
-setupSwagger(app);
-
-// v1 api routes
-app.use("/v1", routes);
-
-// send 404 error jika route tidak ada
-app.use((req, res, next) => {
-  next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
-});
-
-// convert error jadi Instance API Error jika ada error yang tidak ketangkap
-app.use(errorConverter);
-
-// handle error
-app.use(errorHandler);
 
 export default app;
