@@ -1,12 +1,16 @@
 import app from "./app.js";
 import config from "./config/config.js";
 import logger from "./config/logger.js";
-import prisma from "../prisma/index.js";
+import { PrismaClient } from "@prisma/client";
 
-if (prisma) {
+const prisma = new PrismaClient();
+
+try {
+  await prisma.$connect();
   logger.info("Connected to Database");
-} else {
-  logger.error("Failed to connect to Database");
+} catch (error) {
+  logger.error("Failed to connect to Database:", error.message);
+  process.exit(1);
 }
 
 export default app;
