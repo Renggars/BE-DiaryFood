@@ -51,6 +51,18 @@ app.use(
 app.options("*", cors());
 
 app.use((req, res, next) => {
+  const error = new ApiError(httpStatus.NOT_FOUND, "Route not found");
+  if (!res.headersSent) {
+    return res.status(error.statusCode).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+  next(error);
+});
+
+app.use((req, res, next) => {
   const contentType = req.headers["content-type"] || "";
   if (!contentType.startsWith("multipart/form-data")) {
     express.json()(req, res, (err) => {
