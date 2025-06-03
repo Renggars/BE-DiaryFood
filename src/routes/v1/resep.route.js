@@ -8,24 +8,64 @@ import upload from "../../utils/upload.js";
 
 const router = express.Router();
 
-router.use("/:resepId/comment", commentRouter); // Mount ulasan router
+router.use("/:resepId/comment", commentRouter);
 
-router.route("/").post(validate(resepValidation.createResep), resepController.createResep).get(resepController.getReseps);
+router
+  .route("/")
+  .post(validate(resepValidation.createResep), resepController.createResep)
+  .get(resepController.getReseps);
 
-router.post("/:resepId/save", auth(), validate(resepValidation.saveResep), resepController.saveResep);
+router.post(
+  "/:resepId/save",
+  auth(),
+  validate(resepValidation.saveResep),
+  resepController.saveResep
+);
 
-router.delete("/:resepId/unsave", auth(), validate(resepValidation.unsaveResep), resepController.unsaveResep);
+router.delete(
+  "/:resepId/unsave",
+  auth(),
+  validate(resepValidation.unsaveResep),
+  resepController.unsaveResep
+);
+
+router.get(
+  "/:resepId/saved-status",
+  auth(),
+  validate(resepValidation.getResep),
+  resepController.getSavedStatus
+);
 
 router.get("/saved", auth(), resepController.getAllSavedReseps);
 
-router.post("/upload-photo", auth(), upload.single("photo"), validate(resepValidation.uploadPhoto), resepController.uploadPhoto);
+router.post(
+  "/upload-photo",
+  auth(),
+  upload.single("photo"),
+  validate(resepValidation.uploadPhoto),
+  resepController.uploadPhoto
+);
 
-router.put("/:resepId/update-photo", upload.single("file"), validate(resepValidation.updateResepPhoto), resepController.updateResepPhoto);
+router.put(
+  "/:resepId/update-photo",
+  auth(),
+  upload.single("file"),
+  validate(resepValidation.updateResepPhoto),
+  resepController.updateResepPhoto
+);
 
 router
   .route("/:resepId")
   .get(validate(resepValidation.getResep), resepController.getResep)
-  .put(auth(), validate(resepValidation.updateResep), resepController.updateResep)
-  .delete(auth(), validate(resepValidation.deleteResep), resepController.deleteResep);
+  .put(
+    auth(),
+    validate(resepValidation.updateResep),
+    resepController.updateResep
+  )
+  .delete(
+    auth(),
+    validate(resepValidation.deleteResep),
+    resepController.deleteResep
+  );
 
 export default router;

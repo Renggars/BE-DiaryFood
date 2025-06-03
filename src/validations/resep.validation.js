@@ -1,11 +1,13 @@
 import Joi from "joi";
 
 const uploadPhoto = Joi.object({
-  mimetype: Joi.string().valid("image/jpeg", "image/png", "image/webp").messages({
-    "any.only": "File harus berupa gambar (jpeg, png, webp)",
-  }),
+  mimetype: Joi.string()
+    .valid("image/jpeg", "image/png", "image/webp")
+    .messages({
+      "any.only": "File harus berupa gambar (jpeg, png, webp)",
+    }),
   size: Joi.number()
-    .max(5 * 1024 * 1024) // 5MB
+    .max(5 * 1024 * 1024)
     .messages({
       "number.max": "Ukuran file maksimal 5MB",
     }),
@@ -13,7 +15,7 @@ const uploadPhoto = Joi.object({
 
 const updateResepPhoto = {
   params: Joi.object({
-    resepId: Joi.number().integer().required(),
+    resepId: Joi.number().integer().positive().required(),
   }),
   file: uploadPhoto,
 };
@@ -50,16 +52,19 @@ const createResep = {
     description: Joi.string().required(),
     note: Joi.string().optional(),
     rating: Joi.number().optional(),
-    kategoriId: Joi.number().integer().required(),
-    userId: Joi.number().integer().required(),
+    kategoriId: Joi.number().integer().positive().required(),
+    userId: Joi.number().integer().positive().required(),
     bahan: Joi.array().items(bahanSchema).min(1).required(),
-    langkahPembuatan: Joi.array().items(langkahPembuatanSchema).min(1).required(),
+    langkahPembuatan: Joi.array()
+      .items(langkahPembuatanSchema)
+      .min(1)
+      .required(),
   }).min(1),
 };
 
 const updateResep = {
   params: Joi.object({
-    resepId: Joi.number().integer().required(),
+    resepId: Joi.number().integer().positive().required(),
   }),
   body: Joi.object({
     nama: Joi.string().optional(),
@@ -70,9 +75,11 @@ const updateResep = {
     description: Joi.string().required(),
     note: Joi.string().optional(),
     rating: Joi.number().optional(),
-    kategoriId: Joi.number().integer().optional(),
-    userId: Joi.number().integer().optional(),
-    isApproved: Joi.string().valid("APPROVED", "REJECTED", "PENDING").default("PENDING"),
+    kategoriId: Joi.number().integer().positive().optional(),
+    userId: Joi.number().integer().positive().optional(),
+    isApproved: Joi.string()
+      .valid("APPROVED", "REJECTED", "PENDING")
+      .default("PENDING"),
     bahan: Joi.array().items(bahanSchema).optional(),
     langkahPembuatan: Joi.array().items(langkahPembuatanSchema).optional(),
   }).min(1),
@@ -80,22 +87,24 @@ const updateResep = {
 
 const getResep = {
   params: Joi.object({
-    resepId: Joi.number().integer().required(),
+    resepId: Joi.number().integer().positive().required(),
   }),
 };
 
 const deleteResep = {
-  params: Joi.object().keys({
-    resepId: Joi.number().required(),
+  params: Joi.object({
+    resepId: Joi.number().integer().positive().required(),
   }),
 };
 
 const querySchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   limit: Joi.number().integer().min(1).default(10),
-  kategoriId: Joi.number().integer().optional(),
-  userId: Joi.number().integer().optional(),
-  isApproved: Joi.string().valid("APPROVED", "REJECTED", "PENDING").default("PENDING"),
+  kategoriId: Joi.number().integer().positive().optional(),
+  userId: Joi.number().integer().positive().optional(),
+  isApproved: Joi.string()
+    .valid("APPROVED", "REJECTED", "PENDING")
+    .default("PENDING"),
 });
 
 export default {
