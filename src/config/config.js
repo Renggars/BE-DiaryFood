@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 
 const config = {
   env: process.env.NODE_ENV,
-  port: process.env.PORT,
+  port: process.env.PORT || 4000,
   database: {
     url: process.env.DATABASE_URL,
   },
@@ -21,9 +21,7 @@ const config = {
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:
-      process.env.GOOGLE_CALLBACK_URL ||
-      "http://localhost:4000/v1/auth/google/callback",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/v1/auth/google/callback",
   },
   // facebook: {
   //   clientId: process.env.FACEBOOK_CLIENT_ID,
